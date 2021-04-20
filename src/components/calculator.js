@@ -1,5 +1,6 @@
 import React from 'react';
-import {newValue} from '../store/actions';
+import Button from './Button'
+import {addDigit} from '../store/display/actions';
 import {connect} from 'react-redux';
 
 
@@ -9,27 +10,41 @@ class calculator extends React.PureComponent {
         this.state = {  };
     }
 
-    handleClick(){
-        const {changeValue} = this.props;
-        console.log("changevalue")
-        changeValue(10);
-
+    generateNumbersButtons(){
+        const {addNumber} = this.props;
+        let buttons = [];
+        for(let i=0; i < 10 ; i++){
+            buttons.push(
+                <Button
+                    className={`button ${i}`} 
+                    label={i} 
+                    behavior={() => addNumber(i)}  
+                />
+            );
+        }
+        return buttons;
     }
 
     render() {
         const {display} = this.props;
+        const numberButtons = this.generateNumbersButtons();
         return (
-            <div onClick={(e) => this.handleClick(e)}>Calulator {display !== null ? display: "no display"} </div>
+            <>
+                <div className="Title">Calculadora</div>
+                <div className="Display">{display}</div>
+                {numberButtons.map(button => button)}
+            </>
         );
     }
 }
 
 const mapStateToProps = (state) => ({
-    display: state.display
+    display: state.display,
+    digits: state.digits
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    changeValue: (value) => dispatch(newValue(value))
+    addNumber: (value) => dispatch(addDigit(value))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(calculator);
