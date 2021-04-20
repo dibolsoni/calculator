@@ -18,9 +18,12 @@ class Button extends React.PureComponent {
 
     }
     render() {
-        const {label} = this.props;
+        const {type, label} = this.props;
         return ( 
-        <div onClick={(e) => this.handleClick(e)}>
+        <div
+            className={`CalculatorButton ${type} ${label}`}
+            onClick={(e) => this.handleClick(e)}
+        >
             {label}
         </div>           
         );
@@ -28,6 +31,7 @@ class Button extends React.PureComponent {
 }
 
 Button.propTypes = {
+    type: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
     behavior: PropTypes.func.isRequired
 }
