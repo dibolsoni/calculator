@@ -3,7 +3,9 @@ import {
     RESET_VALUE,
     ADD_DIGIT,
     RESET_DIGITS,
-    REMOVE_LAST_DIGIT
+    REMOVE_LAST_DIGIT,
+    HANDLE_OPERATOR,
+    HANDLE_EQUAL
 } from './actionTypes';
 
 export const resetValue = () => ({
@@ -25,4 +27,11 @@ export const removeLastDigit = () => ({
 export const resetDigits = () => ({
     type: RESET_DIGITS
 });
+export const handleOperator = (operator) => ({
+    type: HANDLE_OPERATOR,
+    payload: operator
+});
 
+export const handleEqual = () => ({
+    type: HANDLE_EQUAL,
+});

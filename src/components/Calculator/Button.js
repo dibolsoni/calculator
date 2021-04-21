@@ -14,6 +14,7 @@ class Button extends React.PureComponent {
         const {active} = this.state;
         this.setState({active: !active});
         const {behavior} = this.props;
+        console.log(behavior);
         behavior();
 
     }
@@ -32,7 +33,7 @@ class Button extends React.PureComponent {
 
 Button.propTypes = {
     type: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.any.isRequired,
     behavior: PropTypes.func.isRequired
 }
 export default Button;

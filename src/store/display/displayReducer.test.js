@@ -1,5 +1,12 @@
 import reducer, {initialState} from "./displayReducer";
-import {newValue, addDigit, removeLastDigit, resetDigits} from "./actions";
+import {
+    newValue,
+    addDigit,
+    removeLastDigit, 
+    resetDigits,
+    handleOperator,
+    handleEqual
+} from "./actions";
 import {RESET_VALUE, NEW_VALUE} from './actionTypes';
 
 describe('actions', () => {
@@ -64,6 +71,69 @@ describe('DisplayReducer', () => {
         expect(state).toEqual(expected);
     })
 
-        
+    test('handle operator', () => {
+        let state = reducer(initialState, addDigit(1));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleOperator('+'));
+        expect(state.operator).toEqual("+");
+        expect(state.first_value).toEqual(12);
+    })
 
+    test('handle operation sum', () => {
+        let state = reducer(initialState, addDigit(1));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleOperator('+'));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleEqual())
+        expect(state.result).toEqual(14);
+        expect(state.result).not.toEqual(20);
+
+    })
+
+    test('handle operation multiplication', () => {
+        let state = reducer(initialState, addDigit(1));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleOperator('*'));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleEqual())
+        expect(state.result).toEqual(24);
+        expect(state.result).not.toEqual(20);
+    })
+
+    test('handle operation subtract', () => {
+        let state = reducer(initialState, addDigit(1));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleOperator('-'));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleEqual())
+        expect(state.result).toEqual(10);
+        expect(state.result).not.toEqual(20);
+
+    })
+
+    test('handle operation division', () => {
+        let state = reducer(initialState, addDigit(1));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleOperator('/'));
+        state = reducer(state, addDigit(2));
+        state = reducer(state, handleEqual())
+        expect(state.result).toEqual(6);
+        expect(state.result).not.toEqual(20);
+    })
+
+    test('handle change operator', () => {
+        let state = reducer(initialState, addDigit(1));
+        state = reducer(state, handleOperator('+'));
+        state = reducer(state, handleOperator('-'));
+        expect(state.first_value).toEqual(1);
+        expect(state.operator).toEqual('-');
+
+        state = reducer(state, addDigit('1'));
+        state = reducer(state, handleEqual());
+        expect(state.result).toEqual(0);
+        expect(state.result).not.toEqual(1);
+
+    })
+        
+// TODO: handle equal wihtout operator
 });

@@ -9,9 +9,24 @@
     padding: 1em;
 }
 
+.Operation {
+    display: flex;
+    justify-content: space-between;
+    background-color: wheat;
+    padding: 0.1em;
+    color: gray;
+    min-height: 30px;
+}
+
 .Display {
     background-color: wheat;
     padding: 1em;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr)
+}
+
+.ShowDisplay{
+    grid-area: 1/1/1/6;
 }
 
 .Buttons{
