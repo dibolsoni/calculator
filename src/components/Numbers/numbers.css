@@ -1,0 +1,7 @@
+.Numbers {
+    grid-area: 1/1/5/4;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: space-between;
+    align-content: stretch;
+}

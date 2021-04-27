@@ -1,4 +1,5 @@
 import React from 'react';
+import './numbers.css';
 import { connect } from 'react-redux';
 import Button from '../Button';
 
@@ -14,20 +15,34 @@ class Numbers extends React.PureComponent {
     }
 
     generateNumberButtons(){
-        const {addDigit, clearDigit} = this.props;
+        const {addDigit, clearDigit, last_digit} = this.props;
         let buttons = [];
         for(let i=9; i > -1 ; i--){
             buttons.push(
                 <Button
+                    key={i}
                     type="Number"
                     label={i} 
                     behavior={() => addDigit(i)}
-                    key={i}  
                 />
             );
         }
-        buttons.push(<Button key={'.'} type="Number" label={'.'} behavior={() => addDigit('.')}  />)
-        buttons.push(<Button key={'c'} type="Operator" label={'C'} behavior={() => clearDigit('c')} />);
+        buttons.push(
+            <Button 
+                key={'.'} 
+                type="Number" 
+                label={'.'} 
+                behavior={() => addDigit('.')} 
+            />
+        );
+        buttons.push(
+            <Button 
+                key={'c'} 
+                type="Operator" 
+                label={'C'} 
+                behavior={() => clearDigit('c')} 
+            />
+        );
         return buttons;
     }
 
