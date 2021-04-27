@@ -1,5 +1,6 @@
 import {
     NEW_VALUE, 
+    RESET_STATE,
     RESET_VALUE,
     ADD_DIGIT,
     RESET_DIGITS,
@@ -7,6 +8,10 @@ import {
     HANDLE_OPERATOR,
     HANDLE_EQUAL
 } from './actionTypes';
+
+export const resetState = () => ({
+    type: RESET_STATE,
+});
 
 export const resetValue = () => ({
     type: RESET_VALUE,

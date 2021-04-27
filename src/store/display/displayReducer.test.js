@@ -1,13 +1,19 @@
-import reducer, {initialState} from "./displayReducer";
+
 import {
     newValue,
     addDigit,
-    removeLastDigit, 
+    removeLastDigit,
+    resetState,
     resetDigits,
     handleOperator,
-    handleEqual
+    handleEqual, 
 } from "./actions";
-import {RESET_VALUE, NEW_VALUE} from './actionTypes';
+import {RESET_VALUE, NEW_VALUE, RESET_STATE} from './actionTypes';
+
+import {initialState} from "./displayReducer";
+import store from '../index';
+//jest.mock("./displayReducer")
+
 
 describe('actions', () => {
     test('new value', () => {
@@ -17,123 +23,162 @@ describe('actions', () => {
 });
 
 describe('DisplayReducer', () => {
+    beforeEach(() => {
+        store.dispatch(resetState());
+    });
     test('resets value', () => {
-        expect(reducer(initialState, RESET_VALUE)).toEqual(initialState);
+        expect(store.getState()).toEqual(initialState);
     });
 
+    
     test('change the value', () => {
         const action = {type: NEW_VALUE, payload: 10};
         const expected = {...initialState, display: 10};
-        
-        expect(reducer(undefined, action)).toEqual(expected);
+        store.dispatch(action);
+        expect(store.getState()).toEqual(expected);
     });
 
-    test('add digit only inc one number', () => {
-        const digit = 5;
-        let expected = {...initialState, digits: [digit]};
-        let state = reducer(undefined, addDigit(digit));
-        expect(state).toEqual(expected);
+    test('add digit only inc one digit number', () => {
+        store.dispatch(addDigit(9));
+        let expected = {...initialState, digits: [9]};
+        expect(store.getState()).toEqual(expected);
 
-        const another_digit = 3;
-        expected = {...initialState, digits: [digit, another_digit]};
-        state = reducer(state, addDigit(another_digit));
-        expect(state).toEqual(expected);
 
-        state = reducer(state, addDigit("a"));
-        expect(state).toEqual(expected);
+        store.dispatch(addDigit(3));
+        expected = {...initialState, digits: [9, 3]};
+        expect(store.getState()).toEqual(expected);
 
-        state = reducer(state, addDigit(10));
-        expect(state).toEqual(expected);
+        store.dispatch(addDigit("a"));
+        expect(store.getState()).toEqual(expected);
+
+        store.dispatch(addDigit(10));
+        expect(store.getState()).toEqual(expected);
     });
 
-    test('remove last number', () => {
-        let state = reducer(initialState, addDigit(3));
-        state = reducer(state, addDigit(8));
-        state = reducer(state, removeLastDigit());
-        let expected = {...initialState, digits: [3]};
-        expect(state).toEqual(expected)
+    test('remove last digit', () => {
+        store.dispatch(resetState());
+        expect(store.getState()).toEqual(initialState);
 
-        state = reducer(state, removeLastDigit());
-        expected = {...initialState, digits: []};
-        expect(state).toEqual(expected)
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(8));
+        store.dispatch(removeLastDigit());
+        let expected = {...initialState, digits: [1]};
+        expect(store.getState()).toEqual(expected);
 
-        state = reducer(state, removeLastDigit());
+        store.dispatch(removeLastDigit());
         expected = {...initialState, digits: []};
-        expect(state).toEqual(expected)
+        expect(store.getState()).toEqual(expected);
+
+        store.dispatch(removeLastDigit());
+        expected = {...initialState, digits: []};
+        expect(store.getState()).toEqual(expected);
     })
 
     test('reset digits', () => {
-        let state = reducer(initialState, addDigit(2));
-        state = reducer(state, addDigit(3));
-        state = reducer(state, addDigit(8));
-        state = reducer(state, resetDigits());
-        const expected = initialState;
-        expect(state).toEqual(expected);
+        store.dispatch(addDigit(2));
+        store.dispatch(addDigit(3));
+        store.dispatch(addDigit(8));
+        expect(store.getState().digits).toEqual([2, 3, 8])
+        store.dispatch(resetDigits());
+        expect(store.getState().digits).toEqual([]);
     })
 
     test('handle operator', () => {
-        let state = reducer(initialState, addDigit(1));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleOperator('+'));
-        expect(state.operator).toEqual("+");
-        expect(state.first_value).toEqual(12);
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator('+'));
+        expect(store.getState().operator).toBe('+');
+        expect(store.getState().first_value).toEqual(12);
     })
 
     test('handle operation sum', () => {
-        let state = reducer(initialState, addDigit(1));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleOperator('+'));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleEqual())
-        expect(state.result).toEqual(14);
-        expect(state.result).not.toEqual(20);
-
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator());
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toEqual(12);
+        expect(store.getState().second_value).toEqual(2);
+        expect(store.getState().operator).toEqual('+');
+        expect(store.getState().result).toEqual(14);
     })
 
     test('handle operation multiplication', () => {
-        let state = reducer(initialState, addDigit(1));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleOperator('*'));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleEqual())
-        expect(state.result).toEqual(24);
-        expect(state.result).not.toEqual(20);
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator('*'));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().operator).toEqual('*');
+        expect(store.getState().result).toBe(24);
     })
 
     test('handle operation subtract', () => {
-        let state = reducer(initialState, addDigit(1));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleOperator('-'));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleEqual())
-        expect(state.result).toEqual(10);
-        expect(state.result).not.toEqual(20);
-
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator('-'));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().operator).toEqual('-');
+        expect(store.getState().result).toBe(10);
     })
 
     test('handle operation division', () => {
-        let state = reducer(initialState, addDigit(1));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleOperator('/'));
-        state = reducer(state, addDigit(2));
-        state = reducer(state, handleEqual())
-        expect(state.result).toEqual(6);
-        expect(state.result).not.toEqual(20);
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator('/'));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().operator).toEqual('/');
+        expect(store.getState().result).toBe(6);
     })
 
     test('handle change operator', () => {
-        let state = reducer(initialState, addDigit(1));
-        state = reducer(state, handleOperator('+'));
-        state = reducer(state, handleOperator('-'));
-        expect(state.first_value).toEqual(1);
-        expect(state.operator).toEqual('-');
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator('+'));
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().operator).toBe('+');
+        expect(store.getState().second_value).toBeNull();
 
-        state = reducer(state, addDigit('1'));
-        state = reducer(state, handleEqual());
-        expect(state.result).toEqual(0);
-        expect(state.result).not.toEqual(1);
+        store.dispatch(handleOperator('-'));
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().operator).toBe('-');
+        expect(store.getState().second_value).toBeNull();
+    })
 
+    test('handle equal without operator', () => {
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().second_value).toBe(12);
+        expect(store.getState().operator).toEqual('+');
+        expect(store.getState().result).toBe(24);
+    })
+
+    test('handle equal repeat last operator and number', () => {
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleOperator('*'));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(12);
+        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().operator).toEqual('*');
+        expect(store.getState().result).toBe(24);
+
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(24);
+        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().operator).toEqual('*');
+        expect(store.getState().result).toBe(48);
     })
         
-// TODO: handle equal wihtout operator
 });

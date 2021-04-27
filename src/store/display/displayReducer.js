@@ -1,4 +1,5 @@
 import {
+    RESET_STATE,
     RESET_VALUE,
     REMOVE_LAST_DIGIT,
     RESET_DIGITS,
@@ -8,79 +9,76 @@ import {
     HANDLE_EQUAL
 } from './actionTypes';
 
-function getResult(first_value, operator, second_value){
-    if (!first_value || !second_value)
-        return null;
-    switch (operator) {
-        case '+': return first_value + second_value;
-        case '-': return first_value - second_value;
-        case '/': return first_value / second_value;
-        case '*': return first_value * second_value;
-    default:
-        return null;
-    }
-}
+import {
+    isDigitNumber,
+    getValueFromDigits,
+    DEFAULT_OPERATOR,
+    getResult,
+    hasDigits
+} from './displayReducerHelper';
 
 
 export const initialState = {
     display: 0,
     digits: [],
     first_value: null,
+    second_value: null, 
     operator: null,
+    last_operator: null, 
     result: null
 };
 
+
 const displayReducer = (state = initialState, action) => {
+    const {first_value, second_value, operator, digits, result} = state;
+
     switch(action.type){
+
         //actions without payload
+        case RESET_STATE:
+            return initialState;
         case RESET_VALUE:
             return {...state, display: 0};
         case REMOVE_LAST_DIGIT:
-            const {digits} = state;
-            if (digits.length > 0) 
-                return {
-                    ...state, 
-                    digits: digits.slice(0, digits.length - 1)
-                };
-            return state;
+            if (!hasDigits(digits))
+                return state;
+            return {
+                ...state,
+                digits: state.digits.slice(0, state.digits.length - 1)
+            }
         case RESET_DIGITS:
             return {...state, digits: []};
         case HANDLE_EQUAL:
-            const numberDigits = Number(state.digits.join(""));
-            const {first_value, operator} = state;
-            const result = getResult(first_value, operator, numberDigits);
+            const fv = result ? result : first_value ? first_value: getValueFromDigits(digits);
+            const sv = second_value ? second_value : digits ? getValueFromDigits(digits) : first_value;
+            const op = operator ? operator : DEFAULT_OPERATOR;
+            const r = getResult(fv, op, sv);
             return {
-                ...initialState, 
-                first_value: result,
-                display: result, 
-                result: result,
+                ...state, 
+                digits: [],
+                first_value: fv,
+                second_value: sv,
+                operator: op,
+                result: r
             }
+
 
         //actions with payload
         case NEW_VALUE:
             return {...state, display: action.payload};
         case ADD_DIGIT:
-            const numbers = new RegExp(/^[0-9]$/);
-            if (!numbers.test(action.payload)) return state;
-            return {...state, digits: [...state.digits, action.payload]};
+            if(!isDigitNumber(action.payload))
+                return state;
+            return {
+                ...state, 
+                digits: [...state.digits, action.payload]
+            };
         case HANDLE_OPERATOR:
-            if (state.operator || state.result)
-                return {
-                    ...state,
-                    first_value: state.first_value ? 
-                        state.first_value : state.result ? 
-                            state.result : null,
-                    operator: action.payload,
-                    digits: []
-                }
-            else {
-                const joinedDigits = state.digits.join("");
-                return {
-                    ...state,
-                    first_value: Number(joinedDigits),
-                    operator: action.payload,
-                    digits: []
-                }
+            return {
+                ...state,
+                first_value: first_value ? first_value : getValueFromDigits(digits),
+                operator: action.payload,
+                digits: []
             }
 
         default:

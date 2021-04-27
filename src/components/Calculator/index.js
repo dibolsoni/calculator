@@ -21,31 +21,24 @@ class Calculator extends React.PureComponent {
 
     componentDidUpdate(prevProps) {
         const {digits, result} = this.props;
-        if (!digits.length)
-            return this.setState({
-                showDisplay: result ? result : null
-            })
-        else if (digits !== prevProps.digits){
-            this.setState({
-                showDisplay: digits
-            });
-        }
+        this.setState({showDisplay:digits})
+        console.log(this.state.showDisplay);
     }
 
     generateNumberButtons(){
-        const {addNumber, clearDigit} = this.props;
+        const {addDigit, clearDigit} = this.props;
         let buttons = [];
         for(let i=9; i > -1 ; i--){
             buttons.push(
                 <Button
                     type="Number"
                     label={i} 
-                    behavior={() => addNumber(i)}
+                    behavior={() => addDigit(i)}
                     key={i}  
                 />
             );
         }
-        buttons.push(<Button key={'.'} type="Number" label={'.'} behavior={() => addNumber('.')}  />)
+        buttons.push(<Button key={'.'} type="Number" label={'.'} behavior={() => addDigit('.')}  />)
         buttons.push(<Button key={'c'} type="Operator" label={'C'} behavior={() => clearDigit('c')} />);
         return buttons;
     }
@@ -61,7 +54,7 @@ class Calculator extends React.PureComponent {
     }
 
     handleKey(event){
-        const {addNumber, clearDigit, handleOperator} = this.props;
+        const {addDigit, clearDigit, handleOperator} = this.props;
         event.preventDefault();
         console.log(event)
         switch (event.key) {
@@ -76,7 +69,7 @@ class Calculator extends React.PureComponent {
                 clearDigit(event.key) 
                 break;        
             default:
-                addNumber(event.key)
+                addDigit(event.key)
                 break;
         }
     }
@@ -110,14 +103,15 @@ class Calculator extends React.PureComponent {
 const mapStateToProps = (state) => ({
     display: state.display,
     digits: state.digits,
-    value: state.first_value,
+    first_value: state.first_value,
+    second_value: state.first_value,
     operator: state.operator,
     possible_result: state.possible_result,
     result: state.result
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    addNumber: (value) => dispatch(addDigit(value)),
+    addDigit: (digit) => dispatch(addDigit(digit)),
     handleOperator: (operator) => dispatch(handleOperator(operator)),
     clearDigit: () => dispatch(removeLastDigit()),
     handleEqual: () => dispatch(handleEqual())
