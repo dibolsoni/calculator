@@ -40,19 +40,12 @@
     height: 100/4;
 }
 
-.Buttons > div > div:hover {
+.Button:hover {
     background: #5590D2;
     text-decoration: none;
 }
 
-.Operators {
-    grid-area: 1/4/5/5;
-    grid-template-columns: repeat(1, 1fr);
-    justify-content: space-between; 
-    align-content: stretch;
-    align-items: center;
 
-}
 
 
 

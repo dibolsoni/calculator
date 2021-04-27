@@ -1,0 +1,17 @@
+.Operators {
+    grid-area: 1/4/5/5;
+    display: grid;
+}
+
+.BasicMathOperators {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-content: stretch;
+    align-items: center;
+
+}
+
+.Operator {
+    grid-area: 1fr;
+}
+

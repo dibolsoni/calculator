@@ -1,14 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import "./calculator.css";
-import Button from '../Button'
 import {
-    addDigit,
     handleEqual, 
-    removeLastDigit, 
-    handleOperator
 } from '../../store/calculator/actions';
-
+import Numbers from '../Numbers';
+import Operators from '../Operators';
 
 class Calculator extends React.PureComponent {
     constructor(props) {
@@ -19,23 +16,11 @@ class Calculator extends React.PureComponent {
          };
     }
 
-    componentDidUpdate(prevProps) {
-        const {digits, result} = this.props;
+    componentDidUpdate() {
+        const {digits} = this.props;
         this.setState({showDisplay:digits})
-        console.log(this.state.showDisplay);
     }
 
-
-
-    generateOperatorsButtons(){
-        const {handleOperator} = this.props;
-        return [
-            <Button key={'+'} type="Operator" label={"+"} behavior={() => handleOperator("+")} />,
-            <Button key={'-'} type="Operator" label={"-"} behavior={() => handleOperator("-")} />,
-            <Button key={'*'} type="Operator" label={"*"} behavior={() => handleOperator("*")} />,
-            <Button key={'/'} type="Operator" label={"/"} behavior={() => handleOperator("/")} />,
-        ]
-    }
 
     handleKey(event){
         const {addDigit, clearDigit, handleOperator} = this.props;
@@ -59,7 +44,6 @@ class Calculator extends React.PureComponent {
     }
 
     render() {
-        const operatorButons = this.generateOperatorsButtons();
         const {value, operator, possible_result, handleEqual} = this.props;
         const {showDisplay} = this.state;
         return (
@@ -75,7 +59,8 @@ class Calculator extends React.PureComponent {
                     <div className="EqualDisplay" onClick={() => handleEqual()}>=</div>
                 </div>
                 <div className="Buttons">
-                    <div className="Operators">{operatorButons.map(button => button)}</div>
+                    <Numbers />
+                    <Operators />
                 </div>                
             </div>
         );
@@ -93,7 +78,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    handleOperator: (operator) => dispatch(handleOperator(operator)),
     handleEqual: () => dispatch(handleEqual())
 });
 
