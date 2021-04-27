@@ -180,5 +180,32 @@ describe('DisplayReducer', () => {
         expect(store.getState().operator).toEqual('*');
         expect(store.getState().result).toBe(48);
     })
+
+    test('handle decimal operations', () => {
+        store.dispatch(addDigit(1));
+        store.dispatch(addDigit('.'));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(1.2);
+        expect(store.getState().second_value).toBe(1.2);
+        expect(store.getState().operator).toEqual('+');
+        expect(store.getState().result).toBe(2.4);
+
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(2.4);
+        expect(store.getState().second_value).toBe(1.2);
+        expect(store.getState().operator).toEqual('+');
+        //use to fixed to round decimals
+        expect(store.getState().result.toFixed(2)).toEqual(3.6.toFixed(2));
+
+        store.dispatch(handleOperator('*'));
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value.toFixed(2)).toBe(3.6.toFixed(2));
+        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().operator).toEqual('*');
+        //use to fixed to round decimals
+        expect(store.getState().result.toFixed(2)).toEqual(7.2.toFixed(2));
+    })
         
 });
