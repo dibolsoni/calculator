@@ -15,7 +15,7 @@ import {
     DEFAULT_OPERATOR,
     getResult,
     hasDigits
-} from './displayReducerHelper';
+} from './calculatorReducerHelper';
 
 
 export const initialState = {
@@ -29,7 +29,7 @@ export const initialState = {
 };
 
 
-const displayReducer = (state = initialState, action) => {
+const calculatorReducer = (state = initialState, action) => {
     const {first_value, second_value, operator, digits, result} = state;
 
     switch(action.type){
@@ -87,4 +87,4 @@ const displayReducer = (state = initialState, action) => {
     };
 };
 
-export default displayReducer;
+export default calculatorReducer;

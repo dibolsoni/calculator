@@ -8,11 +8,10 @@ import {
     handleOperator,
     handleEqual, 
 } from "./actions";
-import {RESET_VALUE, NEW_VALUE, RESET_STATE} from './actionTypes';
+import {NEW_VALUE} from './actionTypes';
 
-import {initialState} from "./displayReducer";
+import {initialState} from "./calculatorReducer";
 import store from '../index';
-//jest.mock("./displayReducer")
 
 
 describe('actions', () => {

@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
 
-import displayReducer from './display/displayReducer';
+import calculatorReducer from './calculator/calculatorReducer';
 
 // const rootReducer = combineReducers({
-//     display: displayReducer
+//     display: calculatorReducer
 // });
 
-const rootReducer = displayReducer;
+const rootReducer = calculatorReducer;
 
 export default rootReducer;

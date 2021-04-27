@@ -1,13 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import "./calculator.css";
-import Button from './Button'
+import Button from '../Button'
 import {
     addDigit,
     handleEqual, 
     removeLastDigit, 
     handleOperator
-} from '../../store/display/actions';
+} from '../../store/calculator/actions';
 
 
 class Calculator extends React.PureComponent {
@@ -25,23 +25,7 @@ class Calculator extends React.PureComponent {
         console.log(this.state.showDisplay);
     }
 
-    generateNumberButtons(){
-        const {addDigit, clearDigit} = this.props;
-        let buttons = [];
-        for(let i=9; i > -1 ; i--){
-            buttons.push(
-                <Button
-                    type="Number"
-                    label={i} 
-                    behavior={() => addDigit(i)}
-                    key={i}  
-                />
-            );
-        }
-        buttons.push(<Button key={'.'} type="Number" label={'.'} behavior={() => addDigit('.')}  />)
-        buttons.push(<Button key={'c'} type="Operator" label={'C'} behavior={() => clearDigit('c')} />);
-        return buttons;
-    }
+
 
     generateOperatorsButtons(){
         const {handleOperator} = this.props;
@@ -75,7 +59,6 @@ class Calculator extends React.PureComponent {
     }
 
     render() {
-        const numbersButtons = this.generateNumberButtons();
         const operatorButons = this.generateOperatorsButtons();
         const {value, operator, possible_result, handleEqual} = this.props;
         const {showDisplay} = this.state;
@@ -92,7 +75,6 @@ class Calculator extends React.PureComponent {
                     <div className="EqualDisplay" onClick={() => handleEqual()}>=</div>
                 </div>
                 <div className="Buttons">
-                    <div className="Numbers">{numbersButtons.map(button => button)}</div>
                     <div className="Operators">{operatorButons.map(button => button)}</div>
                 </div>                
             </div>
@@ -111,9 +93,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    addDigit: (digit) => dispatch(addDigit(digit)),
     handleOperator: (operator) => dispatch(handleOperator(operator)),
-    clearDigit: () => dispatch(removeLastDigit()),
     handleEqual: () => dispatch(handleEqual())
 });
 
