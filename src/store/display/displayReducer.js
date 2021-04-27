@@ -77,6 +77,7 @@ const displayReducer = (state = initialState, action) => {
             return {
                 ...state,
                 first_value: first_value ? first_value : getValueFromDigits(digits),
+                second_value: null,
                 operator: action.payload,
                 digits: []
             }
