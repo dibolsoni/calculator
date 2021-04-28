@@ -15,7 +15,7 @@ class Numbers extends React.PureComponent {
     }
 
     generateNumberButtons(){
-        const {addDigit, clearDigit, last_digit} = this.props;
+        const {addDigit, clearDigit} = this.props;
         let buttons = [];
         for(let i=9; i > -1 ; i--){
             buttons.push(

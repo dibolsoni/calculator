@@ -13,5 +13,6 @@
 
 .Operator {
     grid-area: 1fr;
+    padding: 0.5em;
 }
 

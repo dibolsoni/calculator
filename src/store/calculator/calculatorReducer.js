@@ -1,3 +1,4 @@
+import { isNumber } from 'lodash';
 import {
     RESET_STATE,
     RESET_VALUE,
@@ -54,18 +55,17 @@ const calculatorReducer = (state = initialState, action) => {
             return {...state, digits: []};
         case HANDLE_EQUAL:
             const joinedDigits =  getValueFromDigits(digits);
-            const fv = first_value ?
+            const fv = isNumber(first_value) ?
                 first_value : last_operation.first_value ?
                     last_operation.first_value : joinedDigits;
-            const sv = second_value ? 
-                second_value :  hasDigits(digits) ?
-                        joinedDigits : last_operation.second_value ? 
-                            last_operation.second_value : 0;
+            const sv = isNumber(second_value) ? 
+                second_value : hasDigits(digits) ? 
+                    joinedDigits : last_operation.second_value  ?
+                        last_operation.second_value :  null;
             const op = operator ?
                 operator : last_operation.operator ? 
                     last_operation.operator : DEFAULT_OPERATOR;
-
-            if (!fv || !sv || !op)
+            if (!isNumber(fv) || !isNumber(sv) || !op)
                 return state;
             const r = getResult(fv, op, sv);
             return {
@@ -96,7 +96,7 @@ const calculatorReducer = (state = initialState, action) => {
         case HANDLE_OPERATOR:
             return {
                 ...state,
-                first_value: first_value ? first_value : getValueFromDigits(digits),
+                first_value: first_value ? first_value : hasDigits(digits) ? getValueFromDigits(digits) : 0,
                 second_value: second_value ? null : undefined,
                 operator: action.payload,
                 digits: []

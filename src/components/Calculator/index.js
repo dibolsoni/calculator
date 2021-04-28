@@ -2,10 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import "./calculator.css";
 import {
-    handleEqual, 
+    handleEqual, resetState, 
 } from '../../store/calculator/actions';
 import Numbers from '../Numbers';
 import Operators from '../Operators';
+import Button from '../Button';
+import { isNumber } from 'lodash';
 
 class Calculator extends React.PureComponent {
     constructor(props) {
@@ -18,7 +20,10 @@ class Calculator extends React.PureComponent {
 
     componentDidUpdate() {
         const {digits, result} = this.props;
-        this.setState({showDisplay: result && digits.length === 0 ? result : digits})
+        this.setState({
+            showDisplay: isNumber(result) && digits.length === 0 ? 
+            `result: ${result}` : `number: ${digits.join('')}`
+        })
     }
 
 
@@ -44,19 +49,35 @@ class Calculator extends React.PureComponent {
     }
 
     render() {
-        const {first_value, operator, second_value, handleEqual} = this.props;
+        const {first_value, operator, second_value, handleEqual, reset, digits} = this.props;
         const {showDisplay} = this.state;
         return (
             <div className="Calculator" onKeyPress={(e) => this.handleKey(e)}>
                 <div className="Title">Calculadora</div>
-                <div className="Operation">
-                    <span>{first_value? `x: ${first_value}` : undefined}</span>
-                    <span>{operator?  operator : undefined}</span>
-                    <span>{second_value? `y: ${second_value}` : undefined}</span>
-                </div>
                 <div className="Display">
-                    <div className="ShowDisplay">{ showDisplay }</div>
-                    <div className="EqualDisplay" onClick={() => handleEqual()}>=</div>
+                    <div className="Operation">
+                        <Button
+                            type="Operator"
+                            label="reset"
+                            behavior={reset}
+                        />
+                        <span>{isNumber(first_value)? `x: ${first_value}` : undefined}</span>
+                        <span>{operator?  operator : undefined}</span>
+                        <span>{second_value && digits.length === 0? `y: ${second_value}` : undefined}</span>
+                        <Button
+                            type="Operator"
+                            label="history"
+                            behavior={reset}
+                        />
+                    </div>
+                    <div className="ShowDisplay">{ showDisplay ? showDisplay : 0}</div>
+                    <div className="EqualDisplay">
+                        <Button 
+                            type="Equal"
+                            label="=" 
+                            behavior={handleEqual}
+                        />
+                    </div>
                 </div>
                 <div className="Buttons">
                     <Numbers />
@@ -77,7 +98,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    handleEqual: () => dispatch(handleEqual())
+    handleEqual: () => dispatch(handleEqual()),
+    reset: () => dispatch(resetState())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calculator);
