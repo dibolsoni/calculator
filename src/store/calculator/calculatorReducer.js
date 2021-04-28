@@ -21,16 +21,20 @@ import {
 export const initialState = {
     display: 0,
     digits: [],
-    first_value: null,
-    second_value: null, 
-    operator: null,
-    last_operator: null, 
-    result: null
+    first_value: undefined,
+    second_value: undefined, 
+    operator: undefined,
+    last_operation: {
+        first_value: undefined,
+        second_value: undefined,
+        operator: undefined,
+        result: undefined
+    }
 };
 
 
 const calculatorReducer = (state = initialState, action) => {
-    const {first_value, second_value, operator, digits, result} = state;
+    const {first_value, second_value, operator, digits, last_operation} = state;
 
     switch(action.type){
 
@@ -49,17 +53,33 @@ const calculatorReducer = (state = initialState, action) => {
         case RESET_DIGITS:
             return {...state, digits: []};
         case HANDLE_EQUAL:
-            const fv = result ? result : first_value ? first_value: getValueFromDigits(digits);
-            const sv = second_value ? second_value : digits ? getValueFromDigits(digits) : first_value;
-            const op = operator ? operator : DEFAULT_OPERATOR;
+            const joinedDigits =  getValueFromDigits(digits);
+            const fv = first_value ?
+                first_value : last_operation.first_value ?
+                    last_operation.first_value : joinedDigits;
+            const sv = second_value ? 
+                second_value :  hasDigits(digits) ?
+                        joinedDigits : last_operation.second_value ? 
+                            last_operation.second_value : 0;
+            const op = operator ?
+                operator : last_operation.operator ? 
+                    last_operation.operator : DEFAULT_OPERATOR;
+
+            if (!fv || !sv || !op)
+                return state;
             const r = getResult(fv, op, sv);
             return {
                 ...state, 
                 digits: [],
-                first_value: fv,
-                second_value: sv,
+                first_value: r,
+                second_value: null,
                 operator: op,
-                result: r
+                last_operation: {
+                    first_value: fv,
+                    second_value: sv,
+                    operator: op,
+                    result: r
+                }
             }
 
 
@@ -77,7 +97,7 @@ const calculatorReducer = (state = initialState, action) => {
             return {
                 ...state,
                 first_value: first_value ? first_value : getValueFromDigits(digits),
-                second_value: null,
+                second_value: second_value ? null : undefined,
                 operator: action.payload,
                 digits: []
             }

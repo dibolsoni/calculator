@@ -93,13 +93,16 @@ describe('DisplayReducer', () => {
     test('handle operation sum', () => {
         store.dispatch(addDigit(1));
         store.dispatch(addDigit(2));
-        store.dispatch(handleOperator());
+        store.dispatch(handleOperator('+'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toEqual(12);
-        expect(store.getState().second_value).toEqual(2);
-        expect(store.getState().operator).toEqual('+');
-        expect(store.getState().result).toEqual(14);
+        const {last_operation} = store.getState();
+        expect(last_operation.first_value).toEqual(12);
+        expect(last_operation.second_value).toEqual(2);
+        expect(last_operation.operator).toEqual('+');
+        expect(store.getState().last_operation.result).toEqual(14);
+        expect(store.getState().first_value).toEqual(14);
+
     })
 
     test('handle operation multiplication', () => {
@@ -108,10 +111,13 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('*'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(12);
-        expect(store.getState().second_value).toBe(2);
-        expect(store.getState().operator).toEqual('*');
-        expect(store.getState().result).toBe(24);
+        const {last_operation} = store.getState();
+        expect(last_operation.first_value).toBe(12);
+        expect(last_operation.second_value).toBe(2);
+        expect(last_operation.operator).toEqual('*');
+        expect(store.getState().last_operation.result).toBe(24);
+        expect(store.getState().first_value).toEqual(24);
+
     })
 
     test('handle operation subtract', () => {
@@ -120,10 +126,13 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('-'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(12);
-        expect(store.getState().second_value).toBe(2);
-        expect(store.getState().operator).toEqual('-');
-        expect(store.getState().result).toBe(10);
+        const {last_operation} = store.getState();
+        expect(last_operation.first_value).toBe(12);
+        expect(last_operation.second_value).toBe(2);
+        expect(last_operation.operator).toEqual('-');
+        expect(store.getState().last_operation.result).toBe(10);
+        expect(store.getState().first_value).toEqual(10);
+
     })
 
     test('handle operation division', () => {
@@ -132,23 +141,33 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('/'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(12);
-        expect(store.getState().second_value).toBe(2);
-        expect(store.getState().operator).toEqual('/');
-        expect(store.getState().result).toBe(6);
+        const {last_operation} = store.getState();
+        expect(last_operation.first_value).toBe(12);
+        expect(last_operation.second_value).toBe(2);
+        expect(last_operation.operator).toEqual('/');
+        expect(store.getState().last_operation.result).toBe(6);
+        expect(store.getState().first_value).toEqual(6);
+
     })
 
-    test('handle change operator', () => {
+    test('handle change operator between a operation', () => {
         store.dispatch(addDigit(1));
         store.dispatch(addDigit(2));
         store.dispatch(handleOperator('+'));
         expect(store.getState().first_value).toBe(12);
         expect(store.getState().operator).toBe('+');
-        expect(store.getState().second_value).toBeNull();
+        expect(store.getState().second_value).toBeUndefined();
 
         store.dispatch(handleOperator('-'));
         expect(store.getState().first_value).toBe(12);
         expect(store.getState().operator).toBe('-');
+        expect(store.getState().second_value).toBeUndefined();
+
+        store.dispatch(addDigit(2));
+        store.dispatch(handleEqual());
+        expect(store.getState().last_operation.result).toBe(10);
+        expect(store.getState().first_value).toBe(10);
+        expect(store.getState().operator).toEqual('-');
         expect(store.getState().second_value).toBeNull();
     })
 
@@ -156,11 +175,22 @@ describe('DisplayReducer', () => {
         store.dispatch(addDigit(1));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(12);
-        expect(store.getState().second_value).toBe(12);
+        expect(store.getState().first_value).toBe(24);
+        expect(store.getState().second_value).toBeNull();
         expect(store.getState().operator).toEqual('+');
-        expect(store.getState().result).toBe(24);
+        expect(store.getState().last_operation.result).toBe(24);
+        expect(store.getState().last_operation).toEqual({first_value: 12, second_value: 12, operator: '+', result: 24});
+
+        store.dispatch(handleEqual());
+        expect(store.getState().first_value).toBe(36);
+        expect(store.getState().second_value).toBeNull();
+        expect(store.getState().operator).toEqual('+');
+        expect(store.getState().last_operation.result).toBe(36);
+        expect(store.getState().last_operation).toEqual({first_value: 24, second_value: 12, operator: '+', result: 36});
+
     })
+
+
 
     test('handle equal repeat last operator and number', () => {
         store.dispatch(addDigit(1));
@@ -168,16 +198,21 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('*'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(12);
-        expect(store.getState().second_value).toBe(2);
-        expect(store.getState().operator).toEqual('*');
-        expect(store.getState().result).toBe(24);
-
-        store.dispatch(handleEqual());
         expect(store.getState().first_value).toBe(24);
-        expect(store.getState().second_value).toBe(2);
+        expect(store.getState().second_value).toBeNull();
         expect(store.getState().operator).toEqual('*');
-        expect(store.getState().result).toBe(48);
+        expect(store.getState().last_operation.result).toBe(24);
+        expect(store.getState().last_operation).toEqual({first_value: 12, second_value: 2, operator: '*', result: 24})
+
+        const before = store.getState();
+        store.dispatch(handleEqual());
+        expect(store.getState()).not.toBe(before)
+
+        expect(store.getState().first_value).toBe(48);
+        expect(store.getState().second_value).toBeNull();
+        expect(store.getState().operator).toEqual('*');
+        expect(store.getState().last_operation.result).toBe(48);
+        expect(store.getState().last_operation).toEqual({first_value: 24, second_value: 2, operator: '*', result: 48})
     })
 
     test('handle decimal operations', () => {
@@ -185,26 +220,20 @@ describe('DisplayReducer', () => {
         store.dispatch(addDigit('.'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(1.2);
-        expect(store.getState().second_value).toBe(1.2);
-        expect(store.getState().operator).toEqual('+');
-        expect(store.getState().result).toBe(2.4);
+        expect(store.getState().first_value).toBe(2.4);
+        expect(store.getState().last_operation.result).toBe(2.4);
+        
 
         store.dispatch(handleEqual());
-        expect(store.getState().first_value).toBe(2.4);
-        expect(store.getState().second_value).toBe(1.2);
-        expect(store.getState().operator).toEqual('+');
-        //use to fixed to round decimals
-        expect(store.getState().result.toFixed(2)).toEqual(3.6.toFixed(2));
+        expect(store.getState().first_value).toBe(3.6);
+        expect(store.getState().last_operation.result).toEqual(3.6);
 
         store.dispatch(handleOperator('*'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(store.getState().first_value.toFixed(2)).toBe(3.6.toFixed(2));
-        expect(store.getState().second_value).toBe(2);
-        expect(store.getState().operator).toEqual('*');
-        //use to fixed to round decimals
-        expect(store.getState().result.toFixed(2)).toEqual(7.2.toFixed(2));
+        expect(store.getState().first_value).toBe(7.2);
+        expect(store.getState().last_operation.result).toEqual(7.2);
     })
+
         
 });

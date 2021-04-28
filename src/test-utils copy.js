@@ -1,14 +1,14 @@
-import * as React from 'react'
+// test-utils.js
+import React from 'react'
 import { render as rtlRender } from '@testing-library/react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
+// Import your own reducer
 import reducer from './store/reducer'
-import {initialState} from './store/calculator/calculatorReducer';
-
 
 function render(
   ui, 
-  { initState = initialState, store = createStore(reducer, initState), ...renderOptions
+  { initialState, store = createStore(reducer, initialState), ...renderOptions
   } = {}
 ) {
     function Wrapper({ children }) {
@@ -16,6 +16,7 @@ function render(
     }
     return rtlRender(ui, { wrapper: Wrapper, ...renderOptions })
 }
+
 
 
 // re-export everything

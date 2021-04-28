@@ -1,4 +1,13 @@
 
+import {
+    add,
+    subtract,
+    multiply,
+    divide,
+    round
+} from 'lodash';
+
+export const ROUND_N_TO_DECIMALS = 2;
 export const DEFAULT_OPERATOR = '+';
 
 export function hasDigits(digits) {
@@ -13,14 +22,14 @@ export function getValueFromDigits(digits) {
 
 export function getResult(fv, op, sv) {
     switch (op) {
-        case '+': 
-            return fv + sv;
+        case '+':
+            return round(add(fv, sv), ROUND_N_TO_DECIMALS);
         case '-': 
-            return fv - sv;
+            return  round(subtract(fv,sv), ROUND_N_TO_DECIMALS);
         case '*': 
-            return fv * sv;
+            return  round(multiply(fv,sv), ROUND_N_TO_DECIMALS);
         case '/': 
-            return fv / sv;
+            return  round(divide(fv,sv), ROUND_N_TO_DECIMALS);
         default:
             return null;
     }

@@ -17,8 +17,8 @@ class Calculator extends React.PureComponent {
     }
 
     componentDidUpdate() {
-        const {digits} = this.props;
-        this.setState({showDisplay:digits})
+        const {digits, result} = this.props;
+        this.setState({showDisplay: result && digits.length === 0 ? result : digits})
     }
 
 
@@ -44,15 +44,15 @@ class Calculator extends React.PureComponent {
     }
 
     render() {
-        const {value, operator, possible_result, handleEqual} = this.props;
+        const {first_value, operator, second_value, handleEqual} = this.props;
         const {showDisplay} = this.state;
         return (
             <div className="Calculator" onKeyPress={(e) => this.handleKey(e)}>
                 <div className="Title">Calculadora</div>
                 <div className="Operation">
-                    <span>{value? `value: ${value}` : undefined}</span>
-                    <span>{operator? `operator: ${operator}` : undefined}</span>
-                    <span>{possible_result? `possible_result: ${possible_result}` : undefined}</span>
+                    <span>{first_value? `x: ${first_value}` : undefined}</span>
+                    <span>{operator?  operator : undefined}</span>
+                    <span>{second_value? `y: ${second_value}` : undefined}</span>
                 </div>
                 <div className="Display">
                     <div className="ShowDisplay">{ showDisplay }</div>
@@ -71,10 +71,9 @@ const mapStateToProps = (state) => ({
     display: state.display,
     digits: state.digits,
     first_value: state.first_value,
-    second_value: state.first_value,
+    second_value: state.last_operation.second_value,
     operator: state.operator,
-    possible_result: state.possible_result,
-    result: state.result
+    result: state.last_operation.result
 });
 
 const mapDispatchToProps = (dispatch) => ({

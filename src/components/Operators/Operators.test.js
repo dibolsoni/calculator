@@ -1,4 +1,4 @@
-import { render } from '../../test-utils'
+import { render, rerender } from '../../test-utils'
 import '@testing-library/jest-dom/extend-expect'
 import Operators from '.'
 import BasicMathOperators from './BasicMathOperators';
