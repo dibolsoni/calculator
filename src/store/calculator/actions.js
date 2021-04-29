@@ -6,7 +6,7 @@ import {
     RESET_DIGITS,
     REMOVE_LAST_DIGIT,
     HANDLE_OPERATOR,
-    HANDLE_EQUAL
+    HANDLE_EQUAL,
 } from './actionTypes';
 
 export const resetState = () => ({

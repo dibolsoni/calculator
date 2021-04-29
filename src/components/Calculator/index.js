@@ -104,12 +104,12 @@ class Calculator extends React.PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    display: state.display,
-    digits: state.digits,
-    first_value: state.first_value,
-    second_value: state.last_operation.second_value,
-    operator: state.operator,
-    result: state.last_operation.result
+    state: state.present
+    // digits: state.digits,
+    // first_value: state.first_value,
+    // second_value: state.last_operation.second_value,
+    // operator: state.operator,
+    // result: state.last_operation.result
 });
 
 const mapDispatchToProps = (dispatch) => ({

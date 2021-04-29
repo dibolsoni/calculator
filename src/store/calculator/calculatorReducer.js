@@ -30,7 +30,7 @@ export const initialState = {
         second_value: undefined,
         operator: undefined,
         result: undefined
-    }
+    },
 };
 
 
@@ -84,8 +84,9 @@ const calculatorReducer = (state = initialState, action) => {
 
 
         //actions with payload
+        //NOT IMPLEMENTED YET
         case NEW_VALUE:
-            return {...state, display: action.payload};
+            return state;
         case ADD_DIGIT:
             if(!isDigitNumber(action.payload))
                 return state;
@@ -101,6 +102,9 @@ const calculatorReducer = (state = initialState, action) => {
                 operator: action.payload,
                 digits: []
             }
+
+        //history
+        // case 
 
         default:
             return state;
