@@ -1,6 +1,6 @@
-import { HISTORY_REMOVE_STATE, HISTORY_SET_STATE_TO_FIRST } from './actionsType';
+import { REDO, UNDO } from './actionsType';
 
-const reducerWithHistory = (reducer, initState) => {
+const reducerWithUndoRedo = (reducer, initState) => {
     const initialState = {
         past: [],
         present: reducer(initState, {}),
@@ -11,7 +11,7 @@ const reducerWithHistory = (reducer, initState) => {
         const {past, present, future} = state;
 
         switch (action.type) {
-            case HISTORY_REMOVE_STATE:
+            case UNDO:
                 const previous = past[past.length -1];
                 const newPast = past.slice(0, past.length -1)
                 return {
@@ -19,7 +19,7 @@ const reducerWithHistory = (reducer, initState) => {
                     present: previous,
                     future: [present, ...future]
                 }
-            case HISTORY_SET_STATE_TO_FIRST:
+            case REDO:
                 const next = future[0];
                 const newFuture = future.slice(1)
                 return {
@@ -43,4 +43,4 @@ const reducerWithHistory = (reducer, initState) => {
 
 
 
-export default reducerWithHistory;
+export default reducerWithUndoRedo;

@@ -3,7 +3,7 @@ import { render as rtlRender } from '@testing-library/react'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import reducer from './store/reducer'
-import {initialState} from './store/calculator/calculatorReducer';
+import {initialState} from './store/undoRedo/undoRedoReducer';
 
 
 function render(
