@@ -39,8 +39,10 @@ describe('DisplayReducer', () => {
             result: -12
         }
         expect(store.getState().last_operation).toStrictEqual(expected);
-
     })
 
         
 });
+
+
+    
