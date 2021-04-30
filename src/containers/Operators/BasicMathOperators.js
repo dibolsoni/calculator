@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import {connect} from 'react-redux';
 import { handleOperator } from '../../store/calculator/actions';
-import Button from '../Button';
+import Button from '../../components/Button';
 
 
 class BasicMathOperators extends PureComponent {

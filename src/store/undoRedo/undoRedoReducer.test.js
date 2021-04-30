@@ -1,7 +1,7 @@
 import { addDigit } from '../calculator/actions';
 import { initialState } from '../calculator/calculatorReducer';
 import store from '../index';
-import { redo, reset, undo } from './actions';
+import { redo, undo } from './actions';
 
 describe('history reducer', () => {
     test('handle Undo', () => {

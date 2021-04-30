@@ -10,8 +10,9 @@ import {
 } from '../../store/calculator/actions';
 import Numbers from '../Numbers';
 import Operators from '../Operators';
-import Button from '../Button';
+import Button from '../../components/Button';
 import { isNumber } from 'lodash';
+import { redo, undo } from '../../store/undoRedo/actions';
 
 class Calculator extends React.PureComponent {
     constructor(props) {
@@ -20,6 +21,12 @@ class Calculator extends React.PureComponent {
         this.state = { 
             showDisplay: 0
          };
+
+         this.containerRef = React.createRef();
+    }
+    
+    componentDidMount() {
+        this.containerRef.current.focus();
     }
 
     componentDidUpdate() {
@@ -30,11 +37,26 @@ class Calculator extends React.PureComponent {
         })
     }
 
+    handleModKeys(event) {
+        event.preventDefault();
+        const {undo, redo} = this.props;
+        if (!event.ctrlKey)
+            return;
+        switch (event.key) {
+            case 'z':
+                return undo();
+            case 'r':
+                return redo();
+            default:
+                return;
+        }
+    }
 
     handleKey(event){
         const {addDigit, clearDigit, handleOperator, handleEqual, reset} = this.props;
-        console.log(event.key)
         event.preventDefault();
+        if (event.ctrlKey)
+            return this.handleModKeys(event);
         switch (event.key) {
             case "+":
             case "-":
@@ -64,9 +86,13 @@ class Calculator extends React.PureComponent {
         const {showDisplay} = this.state;
         return (
             <div 
+                id="calculator"
+                ref={this.containerRef}
                 className="Calculator" 
-                tabIndex={1}
+                tabIndex={-1}
+                onKeyPress={(e) => this.handleModKeys(e)}
                 onKeyUp={(e) => this.handleKey(e)}
+                autoFocus
             >
                 <div className="Title">Calculadora</div>
                 <div className="Display">
@@ -117,7 +143,9 @@ const mapDispatchToProps = (dispatch) => ({
     handleOperator: (operator) => dispatch(handleOperator(operator)),
     clearDigit: () => dispatch(removeLastDigit()),
     handleEqual: () => dispatch(handleEqual()),
-    reset: () => dispatch(resetState())
+    reset: () => dispatch(resetState()),
+    undo: () => dispatch(undo()),
+    redo: () => dispatch(redo())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Calculator);
