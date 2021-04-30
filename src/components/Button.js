@@ -15,14 +15,14 @@ class Button extends React.PureComponent {
 
     }
     render() {
-        const {type, label} = this.props;
-        return ( 
-        <div
-            className={`CalculatorButton ${type} ${label}`}
-            onClick={(e) => this.handleClick(e)}
-        >
-            {label}
-        </div>           
+        const {type, label, disabled} = this.props;
+        return (
+            <div
+                className={`CalculatorButton ${type} ${label} ${disabled ? 'disabled': null}`}
+                onClick={(e) => this.handleClick(e)}
+            >
+                {label}
+            </div>           
         );
     }
 }
@@ -30,6 +30,7 @@ class Button extends React.PureComponent {
 Button.propTypes = {
     type: PropTypes.string.isRequired,
     label: PropTypes.any.isRequired,
-    behavior: PropTypes.func.isRequired
+    behavior: PropTypes.func.isRequired,
+    disabled: PropTypes.bool
 }
 export default Button;

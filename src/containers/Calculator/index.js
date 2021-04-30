@@ -31,9 +31,15 @@ class Calculator extends React.PureComponent {
 
     componentDidUpdate() {
         const {digits, result} = this.props;
+
+
+        if (!digits) 
+            return;
+
+        const joinedDigits = digits.join('');
         this.setState({
             showDisplay: isNumber(result) && digits.length === 0 ? 
-            `result: ${result}` : `number: ${digits.join('')}`
+            result : joinedDigits
         })
     }
 
@@ -45,7 +51,7 @@ class Calculator extends React.PureComponent {
         switch (event.key) {
             case 'z':
                 return undo();
-            case 'r':
+            case 'y':
                 return redo();
             default:
                 return;
@@ -55,7 +61,7 @@ class Calculator extends React.PureComponent {
     handleKey(event){
         const {addDigit, clearDigit, handleOperator, handleEqual, reset} = this.props;
         event.preventDefault();
-        if (event.ctrlKey)
+        if (event.ctrlKey || event.altKey)
             return this.handleModKeys(event);
         switch (event.key) {
             case "+":
@@ -82,7 +88,7 @@ class Calculator extends React.PureComponent {
     }
 
     render() {
-        const {first_value, operator, second_value, handleEqual, reset, digits} = this.props;
+        const {first_value, operator, second_value, handleEqual, reset, digits, undo, redo, hasPast, hasFuture} = this.props;
         const {showDisplay} = this.state;
         return (
             <div 
@@ -92,27 +98,33 @@ class Calculator extends React.PureComponent {
                 tabIndex={-1}
                 onKeyPress={(e) => this.handleModKeys(e)}
                 onKeyUp={(e) => this.handleKey(e)}
-                autoFocus
             >
-                <div className="Title">Calculadora</div>
+                <div className="Title">Calculator</div>
                 <div className="Display">
                     <div className="Operation">
                         <Button
-                            type="Operator"
+                            type="Reset"
                             label="reset"
                             behavior={reset}
                         />
-                        <span>{isNumber(first_value)? `x: ${first_value}` : undefined}</span>
+                        <span>{isNumber(first_value)? first_value: undefined}</span>
                         <span>{operator?  operator : undefined}</span>
-                        <span>{second_value && digits.length === 0? `y: ${second_value}` : undefined}</span>
-                        <Button
-                            type="Operator"
-                            label="history"
-                            behavior={reset}
-                        />
+                        <span>{second_value && digits.length === 0? second_value : undefined}</span>
                     </div>
                     <div className="ShowDisplay">{ showDisplay ? showDisplay : 0}</div>
                     <div className="EqualDisplay">
+                        <Button
+                            disabled={!hasPast}
+                            type="UndoRedo"
+                            label="undo"
+                            behavior={undo}
+                        />
+                        <Button
+                            disabled={!hasFuture}
+                            type="UndoRedo"
+                            label="redo"
+                            behavior={redo}
+                        />
                         <Button 
                             type="Equal"
                             label="=" 
@@ -135,7 +147,8 @@ const mapStateToProps = (state) => ({
     second_value: state.present.last_operation.second_value,
     operator: state.present.operator,
     result: state.present.last_operation.result,
-    history: state.past
+    hasPast: state.past.length > 0 ? true : false,
+    hasFuture: state.future.length > 0 ? true : false
 });
 
 const mapDispatchToProps = (dispatch) => ({

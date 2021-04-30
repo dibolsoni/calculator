@@ -38,7 +38,7 @@ class Numbers extends React.PureComponent {
         buttons.push(
             <Button 
                 key={'c'} 
-                type="Operator" 
+                type="Number" 
                 label={'C'} 
                 behavior={() => clearDigit('c')} 
             />
@@ -59,6 +59,5 @@ const mapDispatchToProps = (dispatch) => ({
     addDigit: (digit) => dispatch(addDigit(digit)),
     clearDigit: () => dispatch(removeLastDigit()),
 });
-
 
 export default connect(undefined, mapDispatchToProps)(Numbers);
