@@ -1,0 +1,33 @@
+.History {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    padding-top: 0.5em;
+    font-size: small;
+}
+
+table {
+    border-spacing: 0;
+    border: 1px solid black;
+    --color1: #01260A;
+    --color2: #14732B;
+    --color3: #2ABF40;
+    --color4: #44F24F;
+    --color5: #0D0D0D;
+    background-color: var(--color1);
+    color: var(--color3)
+}
+tr:last-child > td {
+    border-bottom: 0;
+}
+    
+
+th,
+td {
+    margin: 0;
+    padding: 0.3rem;
+    border: 1px dashed var(--color2);
+}
+
+th:last-child, td:last-child {
+    border-right: 0;
+}

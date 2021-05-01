@@ -11,7 +11,7 @@ import {
 import Numbers from '../Numbers';
 import Operators from '../Operators';
 import Button from '../../components/Button';
-import { isNumber } from 'lodash';
+import { isNumber, last } from 'lodash';
 import { redo, undo } from '../../store/undoRedo/actions';
 
 class Calculator extends React.PureComponent {
@@ -144,9 +144,9 @@ class Calculator extends React.PureComponent {
 const mapStateToProps = (state) => ({
     digits: state.present.digits,
     first_value: state.present.first_value,
-    second_value: state.present.last_operation.second_value,
+    second_value: last(state.present.history)?.second_value,
     operator: state.present.operator,
-    result: state.present.last_operation.result,
+    result: last(state.present.history)?.result,
     hasPast: state.past.length > 0 ? true : false,
     hasFuture: state.future.length > 0 ? true : false
 });

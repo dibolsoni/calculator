@@ -1,6 +1,8 @@
 import React from 'react';
-import Calculator from './containers/Calculator';
 import { Helmet } from 'react-helmet-async';
+
+import Calculator from './containers/Calculator';
+import History from './containers/History'
 
 
 import './App.css';
@@ -14,6 +16,7 @@ class App extends React.PureComponent {
         <link rel="canonical" href="https://dibolsoni.github.com" />
       </Helmet>
       <Calculator />
+      <History />
     </div>
     );
   };
