@@ -1,4 +1,4 @@
-import { isNumber } from 'lodash';
+import { isNumber, last } from 'lodash';
 import {
     RESET_STATE,
     RESET_VALUE,
@@ -25,18 +25,13 @@ export const initialState = {
     first_value: undefined,
     second_value: undefined, 
     operator: undefined,
-    last_operation: {
-        first_value: undefined,
-        second_value: undefined,
-        operator: undefined,
-        result: undefined
-    },
+    history: [],
 };
 
 
 const calculatorReducer = (state = initialState, action) => {
-    const {first_value, second_value, operator, digits, last_operation} = state;
-
+    const {first_value, second_value, operator, digits, history} = state;
+    const last_history = last(history) || initialState;
     switch(action.type){
 
         //actions without payload
@@ -56,15 +51,15 @@ const calculatorReducer = (state = initialState, action) => {
         case HANDLE_EQUAL:
             const joinedDigits =  getValueFromDigits(digits);
             const fv = isNumber(first_value) ?
-                first_value : last_operation.first_value ?
-                    last_operation.first_value : joinedDigits;
+                first_value : last_history.first_value ?
+                    last_history.first_value : joinedDigits;
             const sv = isNumber(second_value) ? 
                 second_value : hasDigits(digits) ? 
-                    joinedDigits : last_operation.second_value  ?
-                        last_operation.second_value :  null;
+                    joinedDigits : last_history.second_value  ?
+                        last_history.second_value :  null;
             const op = operator ?
-                operator : last_operation.operator ? 
-                    last_operation.operator : DEFAULT_OPERATOR;
+                operator : last_history.operator ? 
+                    last_history.operator : DEFAULT_OPERATOR;
             if (!isNumber(fv) || !isNumber(sv) || !op)
                 return state;
             const r = getResult(fv, op, sv);
@@ -74,12 +69,12 @@ const calculatorReducer = (state = initialState, action) => {
                 first_value: r,
                 second_value: null,
                 operator: op,
-                last_operation: {
+                history:[ ...history, {
                     first_value: fv,
                     second_value: sv,
                     operator: op,
                     result: r
-                }
+                }]
             }
 
 

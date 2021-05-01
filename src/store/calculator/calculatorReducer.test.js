@@ -12,6 +12,7 @@ import {NEW_VALUE} from './actionTypes';
 
 import {initialState} from "./calculatorReducer";
 import store from '../index';
+import { last } from "lodash";
 
 const getState = () => store.getState().present;
 
@@ -51,8 +52,8 @@ describe('DisplayReducer', () => {
         expect(getState().first_value).toBe(24);
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('*');
-        expect(getState().last_operation.result).toBe(24);
-        expect(getState().last_operation).toEqual({first_value: 12, second_value: 2, operator: '*', result: 24})
+        expect(last(getState().history).result).toBe(24);
+        expect(last(getState().history)).toEqual({first_value: 12, second_value: 2, operator: '*', result: 24})
 
         const before = getState();
         store.dispatch(handleEqual());
@@ -61,8 +62,8 @@ describe('DisplayReducer', () => {
         expect(getState().first_value).toBe(48);
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('*');
-        expect(getState().last_operation.result).toBe(48);
-        expect(getState().last_operation).toEqual({first_value: 24, second_value: 2, operator: '*', result: 48})
+        expect(last(getState().history).result).toBe(48);
+        expect(last(getState().history)).toEqual({first_value: 24, second_value: 2, operator: '*', result: 48})
     })
 
     test('handle decimal operations', () => {
@@ -71,18 +72,18 @@ describe('DisplayReducer', () => {
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
         expect(getState().first_value).toBe(2.4);
-        expect(getState().last_operation.result).toBe(2.4);
+        expect(last(getState().history).result).toBe(2.4);
 
 
         store.dispatch(handleEqual());
         expect(getState().first_value).toBe(3.6);
-        expect(getState().last_operation.result).toEqual(3.6);
+        expect(last(getState().history).result).toEqual(3.6);
 
         store.dispatch(handleOperator('*'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
         expect(getState().first_value).toBe(7.2);
-        expect(getState().last_operation.result).toEqual(7.2);
+        expect(last(getState().history).result).toEqual(7.2);
     })  
 
     test('remove last digit', () => {
@@ -127,11 +128,11 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('+'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        const {last_operation} = getState();
+        const last_operation = last(getState().history);
         expect(last_operation.first_value).toEqual(12);
         expect(last_operation.second_value).toEqual(2);
         expect(last_operation.operator).toEqual('+');
-        expect(getState().last_operation.result).toEqual(14);
+        expect(last(getState().history).result).toEqual(14);
         expect(getState().first_value).toEqual(14);
 
     })
@@ -142,11 +143,11 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('*'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        const {last_operation} = getState();
+        const last_operation = last(getState().history);
         expect(last_operation.first_value).toBe(12);
         expect(last_operation.second_value).toBe(2);
         expect(last_operation.operator).toEqual('*');
-        expect(getState().last_operation.result).toBe(24);
+        expect(last(getState().history).result).toBe(24);
         expect(getState().first_value).toEqual(24);
 
     })
@@ -157,11 +158,11 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('-'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        const {last_operation} = getState();
+        const last_operation = last(getState().history);
         expect(last_operation.first_value).toBe(12);
         expect(last_operation.second_value).toBe(2);
         expect(last_operation.operator).toEqual('-');
-        expect(getState().last_operation.result).toBe(10);
+        expect(last(getState().history).result).toBe(10);
         expect(getState().first_value).toEqual(10);
 
     })
@@ -172,11 +173,11 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('/'));
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        const {last_operation} = getState();
+        const last_operation = last(getState().history);
         expect(last_operation.first_value).toBe(12);
         expect(last_operation.second_value).toBe(2);
         expect(last_operation.operator).toEqual('/');
-        expect(getState().last_operation.result).toBe(6);
+        expect(last_operation.result).toBe(6);
         expect(getState().first_value).toEqual(6);
 
     })
@@ -196,7 +197,7 @@ describe('DisplayReducer', () => {
 
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
-        expect(getState().last_operation.result).toBe(10);
+        expect(last(getState().history).result).toBe(10);
         expect(getState().first_value).toBe(10);
         expect(getState().operator).toEqual('-');
         expect(getState().second_value).toBeNull();
@@ -209,15 +210,15 @@ describe('DisplayReducer', () => {
         expect(getState().first_value).toBe(24);
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('+');
-        expect(getState().last_operation.result).toBe(24);
-        expect(getState().last_operation).toEqual({first_value: 12, second_value: 12, operator: '+', result: 24});
+        expect(last(getState().history).result).toBe(24);
+        expect(last(getState().history)).toEqual({first_value: 12, second_value: 12, operator: '+', result: 24});
 
         store.dispatch(handleEqual());
         expect(getState().first_value).toBe(36);
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('+');
-        expect(getState().last_operation.result).toBe(36);
-        expect(getState().last_operation).toEqual({first_value: 24, second_value: 12, operator: '+', result: 36});
+        expect(last(getState().history).result).toBe(36);
+        expect(last(getState().history)).toEqual({first_value: 24, second_value: 12, operator: '+', result: 36});
     });
 
     test('handle operation starting with operator', () => {
@@ -231,7 +232,7 @@ describe('DisplayReducer', () => {
             operator:'-',
             result: -12
         }
-        expect(getState().last_operation).toStrictEqual(expected);
+        expect(last(getState().history)).toStrictEqual(expected);
     })
     
 });
