@@ -7,6 +7,7 @@ import {
     REMOVE_LAST_DIGIT,
     HANDLE_OPERATOR,
     HANDLE_EQUAL,
+    REMOVE_HISTORY,
 } from './actionTypes';
 
 export const resetState = () => ({
@@ -40,3 +41,8 @@ export const handleOperator = (operator) => ({
 export const handleEqual = () => ({
     type: HANDLE_EQUAL,
 });
+
+export const removeHistory = (index) => ({
+    type: REMOVE_HISTORY,
+    payload: index
+})

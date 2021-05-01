@@ -1,4 +1,5 @@
 import { isNumber, last } from 'lodash';
+import { MAX_N_UNDO } from '../undoRedo/undoRedoReducer';
 import {
     RESET_STATE,
     RESET_VALUE,
@@ -7,7 +8,8 @@ import {
     NEW_VALUE,
     ADD_DIGIT,
     HANDLE_OPERATOR,
-    HANDLE_EQUAL
+    HANDLE_EQUAL,
+    REMOVE_HISTORY
 } from './actionTypes';
 
 import {
@@ -63,13 +65,14 @@ const calculatorReducer = (state = initialState, action) => {
             if (!isNumber(fv) || !isNumber(sv) || !op)
                 return state;
             const r = getResult(fv, op, sv);
+            const limitedHistory = history.length < MAX_N_UNDO ? history : history.slice(1);
             return {
                 ...state, 
                 digits: [],
                 first_value: r,
                 second_value: null,
                 operator: op,
-                history:[ ...history, {
+                history:[ ...limitedHistory, {
                     first_value: fv,
                     second_value: sv,
                     operator: op,
@@ -98,8 +101,15 @@ const calculatorReducer = (state = initialState, action) => {
                 digits: []
             }
 
-        //history
-        // case 
+        case REMOVE_HISTORY:
+            const newHistory = action.payload ? [
+                ...history.slice(0, action.payload ), 
+                ...history.slice(action.payload + 1 )
+            ] : history.slice(1);
+            return {
+                ...state,
+                history: newHistory
+            }
 
         default:
             return state;

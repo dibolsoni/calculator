@@ -6,7 +6,8 @@ import {
     resetState,
     resetDigits,
     handleOperator,
-    handleEqual, 
+    handleEqual,
+    removeHistory, 
 } from "./actions";
 import {NEW_VALUE} from './actionTypes';
 
@@ -233,6 +234,59 @@ describe('DisplayReducer', () => {
             result: -12
         }
         expect(last(getState().history)).toStrictEqual(expected);
+    })
+
+    test('inc history after handle equal', () => {
+        store.dispatch(addDigit(5));
+        store.dispatch(handleOperator('+'));
+        store.dispatch(addDigit(9));
+        store.dispatch(handleEqual());
+        expect(last(getState().history)).toStrictEqual({first_value: 5, operator: '+', second_value: 9, result:14})
+    })
+
+    test('remove a history by index', () => {
+        store.dispatch(addDigit(5));
+        store.dispatch(handleOperator('+'));
+        store.dispatch(addDigit(9));
+        store.dispatch(handleEqual());
+        store.dispatch(handleEqual());
+        store.dispatch(handleEqual());
+        expect(getState().history).toHaveLength(3);
+
+        store.dispatch(removeHistory(1));
+        expect(getState().history).toHaveLength(2);
+        const expected = [
+            {
+                first_value: 5, 
+                operator: '+', 
+                second_value: 9, 
+                result:14
+            },
+            {
+                first_value: 23,
+                second_value: 9,
+                operator: '+',
+                result: 32
+            }
+        ]
+        expect(getState().history).toStrictEqual(expected);
+
+        store.dispatch(removeHistory());
+        expect(getState().history).toHaveLength(1);
+        expect(getState().history[0]).toStrictEqual({
+            first_value: 23,
+            second_value: 9,
+            operator: '+',
+            result: 32
+        });
+
+        store.dispatch(removeHistory());
+        expect(getState().history).toHaveLength(0);
+
+        store.dispatch(removeHistory());
+        expect(getState().history).toHaveLength(0);     
+
+        
     })
     
 });
