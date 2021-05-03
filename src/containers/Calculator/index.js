@@ -95,7 +95,7 @@ class Calculator extends React.PureComponent {
                 id="calculator"
                 ref={this.containerRef}
                 className="Calculator" 
-                tabIndex={-1}
+                tabIndex={0}
                 onKeyPress={(e) => this.handleModKeys(e)}
                 onKeyUp={(e) => this.handleKey(e)}
             >

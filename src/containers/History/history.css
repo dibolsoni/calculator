@@ -5,6 +5,12 @@
     font-size: small;
 }
 
+input {
+    background-color: var(--color1);
+    color: var(--color4);
+    overflow: scroll;
+}
+
 table {
     border-spacing: 0;
     border: 1px solid black;
@@ -31,3 +37,14 @@ td {
 th:last-child, td:last-child {
     border-right: 0;
 }
+
+.Pagination {
+    --color1: #01260A;
+    --color2: #14732B;
+    --color3: #2ABF40;
+    --color4: #44F24F;
+    --color5: #0D0D0D;
+    background-color: var(--color1);
+    color:var(--color2);
+}
+

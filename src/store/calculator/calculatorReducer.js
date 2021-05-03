@@ -8,7 +8,8 @@ import {
     ADD_DIGIT,
     HANDLE_OPERATOR,
     HANDLE_EQUAL,
-    REMOVE_HISTORY
+    REMOVE_HISTORY,
+    CHANGE_HISTORY_NAME
 } from './actionTypes';
 
 import {
@@ -33,7 +34,7 @@ export const initialState = {
 
 const calculatorReducer = (state = initialState, action) => {
     const {first_value, second_value, operator, digits, history} = state;
-    const last_history = last(history) || initialState;
+    const last_history = last(history) || initialState.history;
     switch(action.type){
 
         //actions without payload
@@ -73,6 +74,8 @@ const calculatorReducer = (state = initialState, action) => {
                 second_value: null,
                 operator: op,
                 history:[ ...limitedHistory, {
+                    id: isNaN(last_history.id) || last_history.id > 99999 ? 0 : last_history.id + 1,
+                    name: undefined,
                     first_value: fv,
                     second_value: sv,
                     operator: op,
@@ -102,14 +105,27 @@ const calculatorReducer = (state = initialState, action) => {
             }
 
         case REMOVE_HISTORY:
-            const newHistory = action.payload ? [
-                ...history.slice(0, action.payload ), 
-                ...history.slice(action.payload + 1 )
-            ] : history.slice(1);
+            const newHistory = action.payload ? history.filter(item => item.id !== action.payload) : history.slice(1);
             return {
                 ...state,
                 history: newHistory
             }
+        
+        case CHANGE_HISTORY_NAME:
+            
+            const nameChanged = 
+                history
+                    .map(item => {
+                        if (item.id === action.payload.id)
+                            item.name = action.payload.name;
+                        return item
+                    })
+            return {
+                ...state,
+                history: [...nameChanged]
+                    
+            }
+                
 
         default:
             return state;

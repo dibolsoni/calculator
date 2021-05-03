@@ -3,21 +3,33 @@ import { connect } from 'react-redux';
 import './history.css';
 
 import Table from '../../components/Table'
-import { removeHistory } from '../../store/calculator/actions';
+import { changeHistoryName, removeHistory } from '../../store/calculator/actions';
+
+import Button from '../../components/Button'
+import EditableText from '../../components/EditableText';
 
 class History extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {  };
+
     }
 
+
     generateData(history) {
-        const data = history.map(row => ({
-                remove: 'x',
-                operation: row.first_value + row.operator + row.second_value + ' = ' + row.result,
-                name: "click here",
-                obs: ""
-        }));
+        const {removeHistory, changeHistoryName} = this.props;
+        const data = history.map(
+            row => 
+            {
+                const name = row.name ? row.name : 'click here';
+                return ({
+                    remove: <Button label={'x'} behavior={(id) => removeHistory(id)} />,
+                    operation: row.first_value + row.operator + row.second_value + ' = ' + row.result,
+                    name: <EditableText id={row.id} text={name} behavior={(id, name) => changeHistoryName(id, name) } />,
+                    obs: ""
+                })
+            }
+        );
         return data;
     }
 
@@ -48,11 +60,13 @@ class History extends PureComponent {
     }
     render() {
         const {history, removeHistory} = this.props;
+       if (this.refInput?.current) console.log(this.refInput.current.onfocus)
+
         return (
             <div className="History">
                {history?.length ? 
                     <Table 
-                        data={this.generateData(history)} 
+                        data={this.generateData(history).reverse()} 
                         columns={this.generateColumns()}
                         removeHistory={(i) => removeHistory(i)}
                     /> 
@@ -69,7 +83,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    removeHistory: (index) => dispatch(removeHistory(index))
+    removeHistory: (index) => dispatch(removeHistory(index)),
+    changeHistoryName: (index, name) => dispatch(changeHistoryName(index, name))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(History);

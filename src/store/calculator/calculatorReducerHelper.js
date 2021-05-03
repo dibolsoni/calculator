@@ -8,7 +8,7 @@ import {
 } from 'lodash';
 
 export const ROUND_N_TO_DECIMALS = 2;
-export const MAX_N_HISTORY = 10;
+export const MAX_N_HISTORY = 50;
 export const DEFAULT_OPERATOR = '+';
 
 export function hasDigits(digits) {

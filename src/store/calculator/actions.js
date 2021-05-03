@@ -8,6 +8,7 @@ import {
     HANDLE_OPERATOR,
     HANDLE_EQUAL,
     REMOVE_HISTORY,
+    CHANGE_HISTORY_NAME
 } from './actionTypes';
 
 export const resetState = () => ({
@@ -45,4 +46,12 @@ export const handleEqual = () => ({
 export const removeHistory = (index) => ({
     type: REMOVE_HISTORY,
     payload: index
+})
+
+export const changeHistoryName = (id, name) => ({
+    type: CHANGE_HISTORY_NAME,
+    payload: {
+        id,
+        name
+    }
 })

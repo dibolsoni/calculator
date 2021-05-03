@@ -7,13 +7,14 @@ import {
     resetDigits,
     handleOperator,
     handleEqual,
-    removeHistory, 
+    removeHistory,
+    changeHistoryName, 
 } from "./actions";
 import {NEW_VALUE} from './actionTypes';
 
 import {initialState} from "./calculatorReducer";
 import store from '../index';
-import { last } from "lodash";
+import { add, last } from "lodash";
 
 const getState = () => store.getState().present;
 
@@ -54,7 +55,14 @@ describe('DisplayReducer', () => {
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('*');
         expect(last(getState().history).result).toBe(24);
-        expect(last(getState().history)).toEqual({first_value: 12, second_value: 2, operator: '*', result: 24})
+        expect(last(getState().history)).toEqual({
+            id: 0,
+            name: undefined,
+            first_value: 12, 
+            second_value: 2, 
+            operator: '*', 
+            result: 24
+        })
 
         const before = getState();
         store.dispatch(handleEqual());
@@ -64,7 +72,14 @@ describe('DisplayReducer', () => {
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('*');
         expect(last(getState().history).result).toBe(48);
-        expect(last(getState().history)).toEqual({first_value: 24, second_value: 2, operator: '*', result: 48})
+        expect(last(getState().history)).toEqual({
+            id:1,
+            name: undefined,
+            first_value: 24, 
+            second_value: 2, 
+            operator: '*', 
+            result: 48
+        })
     })
 
     test('handle decimal operations', () => {
@@ -212,14 +227,15 @@ describe('DisplayReducer', () => {
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('+');
         expect(last(getState().history).result).toBe(24);
-        expect(last(getState().history)).toEqual({first_value: 12, second_value: 12, operator: '+', result: 24});
+        expect(last(getState().history)).toEqual({
+            id: 0, name: undefined, first_value: 12, second_value: 12, operator: '+', result: 24});
 
         store.dispatch(handleEqual());
         expect(getState().first_value).toBe(36);
         expect(getState().second_value).toBeNull();
         expect(getState().operator).toEqual('+');
         expect(last(getState().history).result).toBe(36);
-        expect(last(getState().history)).toEqual({first_value: 24, second_value: 12, operator: '+', result: 36});
+        expect(last(getState().history)).toEqual({id:1, name: undefined, first_value: 24, second_value: 12, operator: '+', result: 36});
     });
 
     test('handle operation starting with operator', () => {
@@ -228,6 +244,8 @@ describe('DisplayReducer', () => {
         store.dispatch(addDigit(2));
         store.dispatch(handleEqual());
         const expected = {
+            id: 0,
+            name: undefined,
             first_value: 0,
             second_value: 12,
             operator:'-',
@@ -241,7 +259,14 @@ describe('DisplayReducer', () => {
         store.dispatch(handleOperator('+'));
         store.dispatch(addDigit(9));
         store.dispatch(handleEqual());
-        expect(last(getState().history)).toStrictEqual({first_value: 5, operator: '+', second_value: 9, result:14})
+        expect(last(getState().history)).toStrictEqual({
+            first_value: 5,
+            id: 0,
+            name: undefined, 
+            operator: '+', 
+            second_value: 9, 
+            result:14
+        })
     })
 
     test('remove a history by index', () => {
@@ -257,12 +282,16 @@ describe('DisplayReducer', () => {
         expect(getState().history).toHaveLength(2);
         const expected = [
             {
+                id: 0, 
+                name: undefined,
                 first_value: 5, 
                 operator: '+', 
                 second_value: 9, 
                 result:14
             },
             {
+                id: 2,
+                name: undefined,
                 first_value: 23,
                 second_value: 9,
                 operator: '+',
@@ -274,6 +303,8 @@ describe('DisplayReducer', () => {
         store.dispatch(removeHistory());
         expect(getState().history).toHaveLength(1);
         expect(getState().history[0]).toStrictEqual({
+            id: 2,
+            name: undefined,
             first_value: 23,
             second_value: 9,
             operator: '+',
@@ -285,7 +316,24 @@ describe('DisplayReducer', () => {
 
         store.dispatch(removeHistory());
         expect(getState().history).toHaveLength(0);     
+    })
 
+    test('change history name', () => {
+        store.dispatch(addDigit(1));
+        store.dispatch(handleOperator('*'))
+        store.dispatch(addDigit(3));
+        store.dispatch(handleEqual());
+        expect(getState().history[0].id).toBe(0)        
+        const name= 'multiplication';
+        store.dispatch(changeHistoryName(0, name));
+        expect(getState().history[0]).toStrictEqual({
+            first_value: 1,
+            second_value: 3,
+            operator: '*',
+            result: 3,
+            name: name,
+            id: 0
+        })
         
     })
     
