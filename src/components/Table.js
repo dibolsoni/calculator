@@ -24,8 +24,7 @@ function Table({
       gotoPage,
       nextPage,
       previousPage,
-      setPageSize,
-      state: { pageIndex, pageSize },
+      state: { pageIndex},
     } = useTable(
       {
         columns,

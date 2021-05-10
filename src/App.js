@@ -1,11 +1,8 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
-import Calculator from './containers/Calculator';
-import History from './containers/History'
-
-
 import './App.css';
+import Home from './pages/Home';
 
 class App extends React.PureComponent {
   render(){
@@ -15,8 +12,7 @@ class App extends React.PureComponent {
         <title>The Calculator App</title>
         <link rel="canonical" href="https://dibolsoni.github.com" />
       </Helmet>
-      <Calculator />
-      <History />
+      <Home />
     </div>
     );
   };

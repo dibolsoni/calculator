@@ -18,7 +18,7 @@ class Button extends React.PureComponent {
         const {type, label, disabled} = this.props;
         return (
             <div
-                className={`CalculatorButton ${type} ${label} ${disabled ? 'disabled': null}`}
+                className={`CalculatorButton ${type} ${label} ${disabled ? disabled : 'enable'}`}
                 onClick={(e) => this.handleClick(e)}
             >
                 {label}

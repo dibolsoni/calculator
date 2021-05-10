@@ -5,15 +5,20 @@ import {Provider} from 'react-redux';
 import store from './store'
 import { HelmetProvider } from 'react-helmet-async';
 
-
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider } from '@material-ui/styles';
+import {CssBaseline} from '@material-ui/core';
+import theme from './customTheme';
 
 render(
   <Provider store={store}>
     <HelmetProvider>
       <React.StrictMode>
-        <App />
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
       </React.StrictMode>
     </HelmetProvider>
   </Provider>,

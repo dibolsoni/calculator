@@ -7,12 +7,16 @@ class EditableText extends PureComponent {
         super(props);
         this.state = { isEditing: false, newText: undefined };
     }
+
+    componentDidUpdate() {
+        const {text} = this.props;
+        this.setState({text});
+    }
     handleSubmit() {
         const {behavior, id} = this.props;
         const {newText} = this.state;
-        console.log('entrou submit')
         behavior(id, newText);
-        this.setState({isEditing: false, newText: null})
+        this.setState({isEditing: false, newText})
     }
 
     render() {
