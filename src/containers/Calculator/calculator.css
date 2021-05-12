@@ -12,10 +12,10 @@
     --color3: #2ABF40;
     --color4: #44F24F;
     --color5: #0D0D0D;
-    background-color: var(--color1);
-    color: var(--color3);
     padding: 1em;
     border: 10px;
+
+    outline:0;
 }
 
 .Title {

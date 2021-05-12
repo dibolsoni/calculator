@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import './history.css';
 
 import Table from '../../components/Table'
 import { changeHistoryName, removeHistory } from '../../store/calculator/actions';
 
 import Button from '../../components/Button'
 import EditableText from '../../components/EditableText';
+
 
 class History extends PureComponent {
     constructor(props) {
@@ -23,10 +23,10 @@ class History extends PureComponent {
             {
                 const name = row.name ? row.name : 'click here';
                 return ({
-                    remove: <Button label={'x'} behavior={(id) => removeHistory(id)} />,
+                    remove: <Button type={"Delete"} label={row.id} behavior={(id) => removeHistory(id)} />,
+                    id: row.id, 
                     operation: row.first_value + row.operator + row.second_value + ' = ' + row.result,
                     name: <EditableText id={row.id} text={name} behavior={(id, name) => changeHistoryName(id, name) } />,
-                    obs: ""
                 })
             }
         );
@@ -35,43 +35,28 @@ class History extends PureComponent {
 
     generateColumns() {
         return [
-            {
-                Header: 'Calculator History',
-                columns: [
-                    {
-                        Header: ' ',
-                        accessor: 'remove'
-                    },
-                    {
-                        Header: 'Operation',
-                        accessor: 'operation'
-                    },
-                    {
-                        Header: 'Name',
-                        accessor: 'name'
-                    },
-                    {
-                        Header: 'Obs',
-                        accessor: 'obs'
-                    }
-                ]
-            }
-        ]
+            { id: 'id', numeric: false, disablePadding: false, label: 'ID' },
+            { id: 'operation', numeric: false, disablePadding: false, label: 'Operation' },
+            { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+        ];
     }
     render() {
         const {history, removeHistory} = this.props;
        if (this.refInput?.current) console.log(this.refInput.current.onfocus)
 
         return (
-            <div className="History">
+            <div className="History" style={{outline: '0px'}}>
                {history?.length ? 
                     <Table 
                         data={this.generateData(history).reverse()} 
                         columns={this.generateColumns()}
                         removeHistory={(i) => removeHistory(i)}
-                    /> 
+                        dense={true}
+                        title={"History"}
+                    />
                 : 
-                    undefined}
+                    undefined
+                    }
             </div>
         )
         ;

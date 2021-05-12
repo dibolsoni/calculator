@@ -13,6 +13,7 @@ import Operators from '../Operators';
 import Button from '../../components/Button';
 import { isNumber, last } from 'lodash';
 import { redo, undo } from '../../store/undoRedo/actions';
+import { Typography } from '@material-ui/core';
 
 class Calculator extends React.PureComponent {
     constructor(props) {
@@ -99,7 +100,14 @@ class Calculator extends React.PureComponent {
                 onKeyPress={(e) => this.handleModKeys(e)}
                 onKeyUp={(e) => this.handleKey(e)}
             >
-                <div className="Title">Calculator</div>
+                <Typography 
+                    component="h2" 
+                    variant={'h1'}
+                    aria-label={'Calculator Title'}
+                    aria-labelledby={"calculatorTitle"}
+                    paragraph={true}
+                    gutterBottom={true}
+                >Calculator</Typography>
                 <div className="Display">
                     <div className="Operation">
                         <Button
