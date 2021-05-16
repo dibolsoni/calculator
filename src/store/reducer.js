@@ -1,11 +1,14 @@
 // import {combineReducers} from 'redux';
 import reducerWithUndoRedo from './undoRedo/undoRedoReducer'
 import calculatorReducer from './calculator/calculatorReducer';
+import { combineReducers } from 'redux';
+import authReducer from './auth/authReducer';
 
-// const rootReducer = combineReducers({
-//     display: calculatorReducer
-// });
+const rootReducer = combineReducers({
+    calculator: reducerWithUndoRedo(calculatorReducer),
+    auth: authReducer
+});
 
-const rootReducer = reducerWithUndoRedo(calculatorReducer);
+
 
 export default rootReducer;

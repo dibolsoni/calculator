@@ -16,7 +16,7 @@ import {initialState} from "./calculatorReducer";
 import store from '../index';
 import { add, last } from "lodash";
 
-const getState = () => store.getState().present;
+const getState = () => store.getState().calculator.present;
 
 describe('actions', () => {
     test('new value', () => {
