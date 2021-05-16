@@ -20,7 +20,7 @@ const theme = createMuiTheme({
     matrix: {
       background: '#01260A',
       color: '#2ABF40'
-    }
+    },
   },
   typography: {
     fontFamily: 'Orbitron, Roboto, sans-serif',

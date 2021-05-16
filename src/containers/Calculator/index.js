@@ -149,14 +149,16 @@ class Calculator extends React.PureComponent {
     }
 }
 
+const calculatorState = (state) => state.calculator;
+
 const mapStateToProps = (state) => ({
-    digits: state.present.digits,
-    first_value: state.present.first_value,
-    second_value: last(state.present.history)?.second_value,
-    operator: state.present.operator,
-    result: last(state.present.history)?.result,
-    hasPast: state.past.length > 0 ? true : false,
-    hasFuture: state.future.length > 0 ? true : false
+    digits: calculatorState(state).present.digits,
+    first_value: calculatorState(state).present.first_value,
+    second_value: last(calculatorState(state).present.history)?.second_value,
+    operator: calculatorState(state).present.operator,
+    result: last(calculatorState(state).present.history)?.result,
+    hasPast: calculatorState(state).past.length > 0 ? true : false,
+    hasFuture: calculatorState(state).future.length > 0 ? true : false
 });
 
 const mapDispatchToProps = (dispatch) => ({

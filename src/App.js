@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 
 import './App.css';
 import Home from './pages/Home';
+import SignIn from './pages/SignIn';
 
 class App extends React.PureComponent {
   render(){
@@ -12,7 +13,8 @@ class App extends React.PureComponent {
         <title>The Calculator App</title>
         <link rel="canonical" href="https://dibolsoni.github.com" />
       </Helmet>
-      <Home />
+      <SignIn />
+      {/* <Home /> */}
     </div>
     );
   };

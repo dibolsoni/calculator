@@ -64,7 +64,7 @@ class History extends PureComponent {
 }
 
 const mapStateToProps = (state) => ({
-    history: state.present.history
+    history: state.calculator.present.history
 })
 
 const mapDispatchToProps = (dispatch) => ({
