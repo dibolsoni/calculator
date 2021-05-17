@@ -7,6 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Header from '../../containers/Header';
 import {ERRORS} from '../../constants'
 import {STATUS as enumStatus} from '../../store/auth/authReducer';
+import { eq } from 'lodash';
+import { Redirect } from 'react-router';
 
 
 const styles = (theme) => ({
@@ -58,11 +60,16 @@ class SignIn extends React.PureComponent {
     const {emailInput, passwordInput } = this.state;
     let userHasError, passwordHasError = false;
     if (status === enumStatus.rejected) {
-        userHasError = String(error.code).match(ERRORS.auth.userNotFound);
-        passwordHasError = String(error.code).match(ERRORS.auth.passwordIncorrect);
+        userHasError = eq(error.code,ERRORS.auth.userNotFound.code);
+        passwordHasError = eq(error.code,ERRORS.auth.passwordIncorrect.code);
     }
+
     const blockInput = status === enumStatus.requested;
     return (
+        <>
+        {eq(status,enumStatus.connected) ?
+            <Redirect to="/" /> 
+        :
         <>
             <Header />
             <Paper elevation={3} style={{paddingBottom: '3em'}}>
@@ -83,7 +90,7 @@ class SignIn extends React.PureComponent {
                             <TextField
                                 error={true}
                                 id="outlined-email-error-helper-text"
-                                label={"Email-error"}
+                                label={"Email-error:"}
                                 helperText={ERRORS.auth.userNotFound.message}
                                 variant="outlined"
                                 type="email"
@@ -97,7 +104,7 @@ class SignIn extends React.PureComponent {
                             :
                             <TextField
                                 id="outlined-email-helper-text"
-                                label={"Email"}
+                                label={"Email:"}
                                 variant={"outlined"}
                                 required={true}
                                 type={"email"}
@@ -119,7 +126,7 @@ class SignIn extends React.PureComponent {
                                 id="outlined-password-error-helper-text"
                                 type="password"
                                 autoComplete="current-password"
-                                label={"Password-error"}
+                                label={"Password-error:"}
                                 helperText={ERRORS.auth.passwordIncorrect.message}
                                 variant={"outlined"}
                                 onKeyDown={(e) => this.handleSubmit(e)}
@@ -132,7 +139,7 @@ class SignIn extends React.PureComponent {
                                 inputRef={this.refPassword}
                                 onChange={(e) => this.setState({passwordInput: e.target.value})}
                                 id="outlined-password-helper-text"
-                                label={"Password"}
+                                label={"Password:"}
                                 variant={"outlined"}
                                 required={true}
                                 type={"password"}
@@ -143,7 +150,7 @@ class SignIn extends React.PureComponent {
                             />
                         }
                     </div>
-                    <Typography variant={'subtitle1'} component={'p'}>
+                    <Typography variant={'subtitle1'} >
                     {emailInput.length > 5 && passwordInput.length > 3 ? 
                         <div 
                             className={classes.alert}
@@ -156,6 +163,8 @@ class SignIn extends React.PureComponent {
                     </Typography>
                 </form >
             </Paper>
+        </>
+        }
         </>
     );}
 }
@@ -172,5 +181,5 @@ const mapDispatchToProps = dispatch => ({
     signOut: () => dispatch(signOut())
 })
 
-const SignInWithStyles = withStyles(styles, {withTheme: true})(SignIn);
+export const SignInWithStyles = withStyles(styles, {withTheme: true})(SignIn);
 export default connect(mapStateToProps, mapDispatchToProps)(SignInWithStyles);

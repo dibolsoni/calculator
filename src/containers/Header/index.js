@@ -31,7 +31,7 @@ function Header() {
     return (
         <AppBar position="sticky" >
             <Toolbar className={classes.root}>
-                    <Link href="/home" className={classes.items}> Calculator</Link>
+                    <Link href="/" className={classes.items}> Calculator</Link>
                     <Link href="/about" className={classes.items}>About</Link>
                     <Link href="/contribute" className={classes.items}>Contribute</Link>
                     <div className={classes.grow} />

@@ -1,6 +1,6 @@
 import store from '../index';
 import { observer, resetState, signIn, signInRequested, signOut } from './actions';
-import { SIGN_IN_COMPLETED, SIGN_IN_REQUESTED } from './actionTypes';
+import { SIGN_IN, SIGN_IN_COMPLETED, SIGN_IN_REQUESTED } from './actionTypes';
 import {signInUser} from './sagas';
 
 const getState = () => store.getState().auth;
@@ -12,7 +12,7 @@ describe('Authentication Reducer', () => {
     })
 
     test('an action', () => {
-        const expected = {type: SIGN_IN_COMPLETED, payload: {email: 'a', password: 'b'}};
+        const expected = {type: SIGN_IN, payload: {email: 'a', password: 'b'}};
         expect(signIn('a', 'b')).toStrictEqual(expected);
     })
 
