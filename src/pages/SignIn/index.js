@@ -71,7 +71,6 @@ class SignIn extends React.PureComponent {
             <Redirect to="/" /> 
         :
         <>
-            <Header />
             <Paper elevation={3} style={{paddingBottom: '3em'}}>
                 <Typography
                     className={classes.title}

@@ -49,10 +49,15 @@ class MenuAccount extends PureComponent {
         })
     }
 
+    componentDidUpdate() {
+        this.signedOut();
+    }
+
     render() {
         const {auth, isConnected} = this.props;
         const {isOpen, signingOut} = this.state;
-        this.signedOut();
+
+
         return (
             isConnected? 
             <>

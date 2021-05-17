@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import Calculator from '../containers/Calculator'
 import History from '../containers/History'
-import Header from '../containers/Header'
 
 class Home extends PureComponent {
     constructor(props) {
@@ -11,7 +10,6 @@ class Home extends PureComponent {
     render() {
         return (
             <>
-            <Header />
             <Calculator />
             <History />                
             </>
