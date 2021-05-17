@@ -11,7 +11,8 @@ class MenuAccount extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            isOpen: false
+            isOpen: false,
+            signingOut: false
         };
 
         this.refMenuBtn = React.createRef();
@@ -31,21 +32,38 @@ class MenuAccount extends PureComponent {
     }
 
 
-    render() {
-        const {auth} = this.props;
-        const {isOpen} = this.state;
+    handleSignOut() {
+        const {signOut} = this.props;
+        this.setState({
+            isOpen: false,
+            signingOut: true
+        },
+        () => signOut())
+    }
 
+    signedOut() {
+        const {isConnected} = this.props;
+        if (this.state.signingOut && !isConnected)
+        this.setState({
+            signingOut: false
+        })
+    }
+
+    render() {
+        const {auth, isConnected} = this.props;
+        const {isOpen, signingOut} = this.state;
+        this.signedOut();
         return (
-            auth? 
+            isConnected? 
             <>
                 <IconButton
                     ref={this.refMenuBtn}
-                    aria-label="account of current user"
+                    aria-label={`account of ${auth.email} `}
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
                     onClick={(e) => this.handleClick(e)}
                 >
-                    <AccountCircleSharp color='inherit' /> 
+                    <AccountCircleSharp color='secondary' /> 
                 </IconButton>
                 
 
@@ -60,7 +78,7 @@ class MenuAccount extends PureComponent {
                     <Link href={"/profile"}>
                         <MenuItem>Profile</MenuItem>
                     </Link>
-                    <Link href={"/logout"}>
+                    <Link onClick={() => this.handleSignOut()}>
                         <MenuItem>Log out</MenuItem>
                     </Link>
                 </Menu>
@@ -69,7 +87,7 @@ class MenuAccount extends PureComponent {
             <>
                 <IconButton
                     ref={this.refMenuBtn}
-                    aria-label="account of current user"
+                    aria-label={`account of current user`}
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
                     onClick={(e) => this.handleClick(e)}
@@ -77,7 +95,9 @@ class MenuAccount extends PureComponent {
                 >
                     <AccountCircleOutlined color='inherit' /> 
                 </IconButton>
-
+                {signingOut ? 
+                undefined
+                :
                 <Menu
                     id="fade-menu"
                     anchorEl={this.refMenuBtn.current}
@@ -93,6 +113,7 @@ class MenuAccount extends PureComponent {
                         <MenuItem>Sign up</MenuItem>
                     </Link>
                 </Menu>
+                }
             </>
 
         )
@@ -103,9 +124,10 @@ class MenuAccount extends PureComponent {
 
 MenuAccount.propTypes = {
     auth: PropTypes.exact({
-        name: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired
-    })
+    }),
+    signOut: PropTypes.func.isRequired,
+    isConnected: PropTypes.bool.isRequired
 }
 
 export default MenuAccount;
