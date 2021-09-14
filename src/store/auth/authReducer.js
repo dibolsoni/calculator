@@ -4,7 +4,6 @@ import {
 } from './actionTypes';
 
 
-
 export const STATUS = {
     idle: 'IDLE',
     requested: 'REQUESTED',

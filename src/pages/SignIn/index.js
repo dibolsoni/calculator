@@ -4,7 +4,6 @@ import { signIn, signOut } from '../../store/auth/actions';
 import { Paper, Typography, Link } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import Header from '../../containers/Header';
 import {ERRORS} from '../../constants'
 import {STATUS as enumStatus} from '../../store/auth/authReducer';
 import { eq } from 'lodash';

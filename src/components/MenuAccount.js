@@ -129,7 +129,7 @@ class MenuAccount extends PureComponent {
 
 MenuAccount.propTypes = {
     auth: PropTypes.exact({
-        email: PropTypes.string.isRequired
+        email: PropTypes.string
     }),
     signOut: PropTypes.func.isRequired,
     isConnected: PropTypes.bool.isRequired

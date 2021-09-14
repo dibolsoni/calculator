@@ -2,7 +2,7 @@ import React from 'react';
 import { AppBar, Toolbar, Link } from '@material-ui/core';
 import MenuAccount from '../../components/MenuAccount';
 import { withStyles } from '@material-ui/core/styles';
-import { signOut } from '../../store/auth/actions'
+import { observer, signOut } from '../../store/auth/actions'
 import { connect } from 'react-redux';
 import { STATUS } from '../../store/auth/authReducer';
 import { eq } from 'lodash';
@@ -63,7 +63,8 @@ const mapStateToProps = state => ({
   }
 })
 const mapDispatchToProps = dispatch => ({
-  signOut: () => dispatch(signOut())
+  signOut: () => dispatch(signOut()),
+  authObserver: () => dispatch(observer())
 })
 export const HeaderWithStyles = withStyles(styles, { withTheme: true })(Header);
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderWithStyles);
