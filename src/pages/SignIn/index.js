@@ -78,7 +78,13 @@ class SignIn extends React.PureComponent {
                     paragraph={true}
                 >
                     Sign In
-            </Typography>
+                </Typography>
+                <Typography
+                    className={classes.alert}
+                    variant={'subtitle1'}
+                >
+                    Not Implemented Yet
+                </Typography>
                 <form 
                     className={classes.root}  
                     autoComplete="on"
