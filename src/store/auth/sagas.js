@@ -10,6 +10,10 @@ firebase.apps.length ?
     firebase.app() : firebase.initializeApp(firebaseConfig);
 
 async function getUser(email, password) {
+    //show mode
+    const err = {error: {code: null, message: null }}
+    return {email, err}
+    //show mode
     let user, error;
     await firebase
         .auth()
