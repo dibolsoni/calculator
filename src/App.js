@@ -14,7 +14,7 @@ import Header from './containers/Header';
 class App extends React.PureComponent {
   render(){
     return (
-    <Router>
+    <Router basename={"/calculator"}>
       <div className="App">
         <Helmet>
           <title>The Calculator App</title>

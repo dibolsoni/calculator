@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import {Menu, MenuItem, Fade,  IconButton, Link} from '@material-ui/core'
 import {AccountCircleOutlined, AccountCircleSharp} from '@material-ui/icons'
 import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
 
 
 
@@ -111,12 +112,12 @@ class MenuAccount extends PureComponent {
                     onClose={() => this.handleClose()}
                     TransitionComponent={Fade}
                 >
-                    <Link href={"/signin"}>
+                    <RouterLink to='/signin'><Link>
                         <MenuItem>Sign in</MenuItem>
-                    </Link>
-                    <Link href={"/signup"}>
+                    </Link> </RouterLink>
+                    <RouterLink to='/signout'><Link>
                         <MenuItem>Sign up</MenuItem>
-                    </Link>
+                    </Link></RouterLink>
                 </Menu>
                 }
             </>

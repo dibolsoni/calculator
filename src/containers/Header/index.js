@@ -6,7 +6,7 @@ import { observer, signOut } from '../../store/auth/actions'
 import { connect } from 'react-redux';
 import { STATUS } from '../../store/auth/authReducer';
 import { eq } from 'lodash';
-
+import { Link as RouterLink } from 'react-router-dom';
 
 const styles = (theme) => ({
   root: {
@@ -38,9 +38,9 @@ class Header extends React.PureComponent {
     return (
       <AppBar position="sticky" >
         <Toolbar className={classes.root}>
-          <Link href="/" className={classes.items}> Calculator</Link>
-          <Link href="/about" className={classes.items}>About</Link>
-          <Link href="/contribute" className={classes.items}>Contribute</Link>
+          <RouterLink to="/"> <Link className={classes.items}> Calculator</Link> </RouterLink>
+          <RouterLink to="/about"> <Link className={classes.items}>About</Link> </RouterLink>
+          <RouterLink to="/contribute"> <Link className={classes.items}>Contribute</Link> </RouterLink>
           <div className={classes.grow} />
           <MenuAccount
             isConnected={isConnected}
